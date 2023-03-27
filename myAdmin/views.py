@@ -5,4 +5,7 @@ from django.shortcuts import render
 app_name = 'myAdmin'
 
 def dashboard(request):
-    return render(request, "myAdmin/index.html")
+    return render(request, app_name+"\index.html")
+
+def login(request):
+    return render(request, app_name+'\login.html')

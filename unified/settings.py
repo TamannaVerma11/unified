@@ -58,8 +58,8 @@ ROOT_URLCONF = 'unified.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [TEMPLATE_DIR],
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -81,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'unified',
-        'USERNAME': 'tamanna',
-        'PASSWORD': '23wesdxc@#WESDXC%',
+        'USERNAME': 'sumit',
+        'PASSWORD': 'yes',
         'POST': '3306',
         'HOST': 'localhost',
     }

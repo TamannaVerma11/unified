@@ -1,2 +1,22 @@
 {% load static %}
-    {% include "header.html" %}
+<!DOCTYPE html>
+<html lang="zxx">
+   {% include "header.html" %}
+   <body class="crm_body_bg">
+      {% include "sidebar.html" %}
+      <section class="main_content dashboard_part large_header_bg">
+         {% include "nav.html" %}
+         {% block content %}
+         
+         {% endblock  %}
+         {% include "footer.html" %}
+      </section>
+      {% include "chatbox.html" %}
+      <div id="back-top" style="display: none;">
+         <a title="Go to Top" href="#">
+         <i class="ti-angle-up"></i>
+         </a>
+      </div>
+      {% include "js.html" %}
+   </body>
+</html>
