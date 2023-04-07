@@ -10,26 +10,26 @@
          </div>
          <ul id="sidebar_menu">
             <li>
-               <a href="index.html" aria-expanded="false">
+               <a href="{% url 'dashboard' %}" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/dashboard.svg' %}" alt="">
                   </div>
                   <div class="nav_title">
-                     <span>Analytic</span>
+                     <span>Dashboard</span>
                   </div>
                </a>
             </li>
             <li>
-               <a href="index_2.html" aria-expanded="false">
+               <a href="{% url 'classIndex' %}" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/2.svg' %}" alt="">
                   </div>
                   <div class="nav_title">
-                     <span>Default </span>
+                     <span>Classes </span>
                   </div>
                </a>
             </li>
-            <li>
+            <li style="display:none">
                <a href="index_3.html" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
@@ -39,8 +39,8 @@
                   </div>
                </a>
             </li>
-            <h4 class="menu-text"><span>CUSTOM</span> <i class="fas fa-ellipsis-h"></i> </h4>
-            <li class="">
+            <h4 class="menu-text"  style="display:none"><span>CUSTOM</span> <i class="fas fa-ellipsis-h"></i> </h4>
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/5.svg' %}" alt="">
@@ -56,7 +56,7 @@
                   <li><a href="faq.html">FAQ</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/16.svg' %}" alt="">
@@ -74,8 +74,8 @@
                   <li><a href="gallery.html">Gallery</a></li>
                </ul>
             </li>
-            <h4 class="menu-text"><span>LAYOUT</span> <i class="fas fa-ellipsis-h"></i> </h4>
-            <li class="">
+            <h4 class="menu-text"  style="display:none"><span>LAYOUT</span> <i class="fas fa-ellipsis-h"></i> </h4>
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/4.svg' %}" alt="">
@@ -89,7 +89,7 @@
                   <li><a href="light_sidebar.html">light Sidebar</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/16.svg' %}" alt="">
@@ -104,7 +104,7 @@
                   <li><a href="fixed_footer.html">Fixed Footer</a></li>
                </ul>
             </li>
-            <li>
+            <li  style="display:none">
                <a href="Builder.html" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/2.svg' %}" alt="">
@@ -114,8 +114,8 @@
                   </div>
                </a>
             </li>
-            <h4 class="menu-text"><span>Elements</span> <i class="fas fa-ellipsis-h"></i> </h4>
-            <li class="">
+            <h4 class="menu-text"  style="display:none"><span>Elements</span> <i class="fas fa-ellipsis-h"></i> </h4>
+            <li class=""  style="display:none">
                <a href="invoice.html" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/6.svg' %}" alt="">
@@ -125,7 +125,7 @@
                   </div>
                </a>
             </li>
-            <li class="">
+            <li class=""  style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/4.svg' %}" alt="">
@@ -141,7 +141,7 @@
                   <li><a href="Layouts.html">Layouts</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class=""  style="display:none">
                <a href="Board.html" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/5.svg' %}" alt="">
@@ -151,7 +151,7 @@
                   </div>
                </a>
             </li>
-            <li class="">
+            <li class=""  style="display:none">
                <a href="calender.html" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/7.svg' %}" alt="">
@@ -161,7 +161,7 @@
                   </div>
                </a>
             </li>
-            <li class="">
+            <li class=""  style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/8.svg' %}" alt="">
@@ -177,7 +177,7 @@
                   <li><a href="Checkout.html">Checkout</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class=""  style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/9.svg' %}" alt="">
@@ -191,8 +191,8 @@
                   <li><a href="themefy_icon.html">themefy icon</a></li>
                </ul>
             </li>
-            <h4 class="menu-text"><span>Features</span> <i class="fas fa-ellipsis-h"></i> </h4>
-            <li class="">
+            <h4 class="menu-text"  style="display:none"><span>Features</span> <i class="fas fa-ellipsis-h"></i> </h4>
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/8.svg' %}" alt="">
@@ -207,7 +207,7 @@
                   <li><a href="tilt.html">Tilt Animation</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/9.svg' %}" alt="">
@@ -224,7 +224,7 @@
                   <li><a href="Pagination.html">Pagination</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/11.svg' %}" alt="">
@@ -238,7 +238,7 @@
                   <li><a href="bootstrap_table.html">Bootstrap</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/12.svg' %}" alt="">
@@ -253,7 +253,7 @@
                   <li><a href="dargable_card.html">Draggable Card</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/12.svg' %}" alt="">
@@ -270,7 +270,7 @@
                   <li><a href="nvd3_charts.html">nvd3 charts.</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
@@ -292,7 +292,7 @@
                   <li><a href="datepicker.html">Date Picker</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/14.svg' %}" alt="">
@@ -306,7 +306,7 @@
                   <li><a href="profilebox.html">Profile Box</a></li>
                </ul>
             </li>
-            <li class="">
+            <li class="" style="display:none">
                <a class="has-arrow" href="#" aria-expanded="false">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/15.svg' %}" alt="">
