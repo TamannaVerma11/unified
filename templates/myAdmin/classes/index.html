@@ -22,10 +22,10 @@
                                         </div>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="{% url 'add_section' %}" data-bs-toggle="modal" data-bs-target="#add_section" class="btn_1">Add Section</a>
+                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_section" class="btn_1">Add Section</a>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="{% url 'add_class' %}" data-bs-toggle="modal" data-bs-target="#add_class" class="btn_1">Add Class</a>
+                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_class" class="btn_1">Add Class</a>
                                     </div>
                                 </div>
                             </div>
@@ -34,115 +34,31 @@
                                 <table class="table lms_table_active ">
                                     <thead>
                                         <tr>
-                                            <th scope="col">title</th>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">Teacher</th>
-                                            <th scope="col">Lesson</th>
-                                            <th scope="col">Enrolled</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Status</th>
+                                            <th scope="col">S. No.</th>
+                                            <th scope="col">Class Name</th>
+                                            <th scope="col">Section</th>
+                                            <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
-                                            <td>Category name</td>
-                                            <td>Teacher James</td>
-                                            <td>Lessons name</td>
-                                            <td>16</td>
-                                            <td>$25.00</td>
-                                            <td><a href="#" class="status_btn">Active</a></td>
-                                        </tr>
+                                        {% for class in classes %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ class.class_name }}</td>
+                                                <td>
+                                                    {% for data in class_section %}
+                                                        {% if class.adminbase_ptr_id == data.class_id_id %}
+                                                            {% for section in sections %}
+                                                                {% if section.adminbase_ptr_id  == data.section_id_id %}
+                                                                    {{section.section_name}} {% if forloop.counter != 0 %} ,{% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{class.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm"></i>  </td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -162,13 +78,23 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                {{class_form}}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form id="add-class">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% for form in class_form %}
+                        {{form}}
+                    {% endfor %}
+                    <select name="section_id" class="form-select" multiple id="id_section_id">
+                        {% for section in sections %}
+                        <option value="{{ section.id }}"> {{ section.section_name }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -177,20 +103,42 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLongTitle">Add Section</h3>
-                <br><p>Please add section before you add class</p>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                {% for form in section_form %}
-                    {{form}}
-                {% endfor %}
+            <form id="add-section">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% for form in section_form %}
+                        {{form}}
+                    {% endfor %}
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form id="del_form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Proceed</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

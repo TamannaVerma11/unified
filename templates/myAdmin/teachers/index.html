@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="main_content_iner ">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="white_card card_height_100 mb_30">
+                    <div class="white_card_body">
+                        <div class="QA_section">
+                            <div class="white_box_tittle list_header">
+                                <h4>Teacher List</h4>
+                                <div class="box_right d-flex lms_block">
+                                    <div class="serach_field_2">
+                                        <div class="search_inner">
+                                            <form Active="#">
+                                                <div class="search_field">
+                                                    <input type="text" placeholder="Search content here...">
+                                                </div>
+                                                <button type="submit"> <i class="ti-search"></i> </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="add_button ms-2">
+                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_student" class="btn_1">Add Teacher</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="QA_table mb_30">
+                                <table class="table lms_table_active ">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Roll No.</th>
+                                            <th scope="col">First Name</th>
+                                            <th scope="col">Last Name</th>
+                                            <th scope="col">Phone</th>
+                                            <th scope="col">Class</th>
+                                            <th scope="col">Section</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for student in students %}
+                                            <tr>
+                                                <td>{{ student.roll_no }}</td>
+                                                <td>{{ student.user_id.first_name }}</td>
+                                                <td>{{ student.user_id.last_name }}</td>
+                                                <td>{{ student.mobile }}</td>
+                                                <td>{{ student.class_id.class_name }}</td>
+                                                <td>{{ student.section_id.section_name }}</td>
+                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{student.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm"></i>  </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add_student" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLongTitle">Add Student</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-student">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label" for="admission_no">Admission No</label>
+                            <input type="text" class="form-control" id="admission_no" name="admission_no">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="roll_no">Roll No</label>
+                            <input type="text" class="form-control" id="roll_no" name="roll_no">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="class_id">Class</label>
+                            <select id="class_id" name="class_id"  class="form-select">
+                                <option value="">Select Class</option>
+                                {% for classes in class_data %}
+                                    <option value="{{ classes.adminbase_ptr_id  }}">{{ classes.class_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="section_id">Section</label>
+                            <select id="section_id" name="section_id"  class="form-select">
+                                <option value="">Select Section</option>
+                                {% for section in sections %}
+                                    <option value="{{ section.adminbase_ptr_id  }}">{{ section.section_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="academic_year">Academic Year</label>
+                            <input type="text" class="form-control" id="academic_year" name="academic_year">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="first_name">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="last_name">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label" for="gender">Gender</label>
+                            <input type="text" class="form-control" id="gender" name="gender">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="dob">Date of Birth</label>
+                            <input type="date" class="form-control" id="dob" name="dob">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="admission_data">Admission Date</label>
+                            <input type="date" class="form-control" id="admission_data" name="admission_data">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="father_name">Father Name</label>
+                            <input type="text" class="form-control" id="father_name" name="father_name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mother_name">Mother Name</label>
+                            <input type="text" class="form-control" id="mother_name" name="mother_name">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="father_mobile">Father's Mobile</label>
+                            <input type="text" class="form-control" id="father_mobile" name="father_mobile">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mother_mobile">Mother's Mobile</label>
+                            <input type="text" class="form-control" id="mother_mobile" name="mother_mobile">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label" for="address">Address</label>
+                            <textarea class="form-control" maxlength="225" rows="3" name="address" id="address" placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <form id="del_form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Proceed</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock  %}

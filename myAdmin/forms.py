@@ -1,12 +1,6 @@
 from django import forms
 from .models import *
-
-FRUIT_CHOICES= [
-    ('orange', 'Oranges'),
-    ('cantaloupe', 'Cantaloupes'),
-    ('mango', 'Mangoes'),
-    ('honeydew', 'Honeydews'),
-    ]
+from django.forms import inlineformset_factory
 
 class BaseForm(forms.ModelForm):
     pass
@@ -23,10 +17,9 @@ class LoginForm(BaseForm):
 class AddClassForm(BaseForm):
     class Meta:
         model = Class
-        fields = ['class_name', 'section_id']
+        fields = ['class_name']
         widgets = {
             'class_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Number'}),
-            'section_id' : forms.Select(attrs={'class' : 'form-control'}, choices=FRUIT_CHOICES)
         }
 
 class AddSectionForm(BaseForm):
@@ -34,8 +27,9 @@ class AddSectionForm(BaseForm):
         model = Section
         fields = ['section_name']
         widgets = {
-            'section_name' : forms.TimeInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Section Name'})
+            'section_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Section Name'})
         }
+
 
     
 

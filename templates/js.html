@@ -40,3 +40,108 @@
 <script src="{% static 'vendors/chart_am/chart-custom.js' %}"></script>
 <script src="{% static 'js/dashboard_init.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
+<script>
+    $("#add-section").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'classIndex' %}",
+            data: {
+                section_name:$('#id_section_name').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post',
+                form_type: 'section'
+            },
+            success: function (response) {
+                $("#add-section").trigger('reset');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    });
+
+    $("#add-class").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'classIndex' %}",
+            data: {
+                class_name:$('#id_class_name').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post',
+                section_id: $('#id_section_id').val(),
+                form_type: 'class'
+            },
+            success: function (response) {
+                $("#add-class").trigger('reset');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    });
+
+    $(".fa-trash").click(function() {
+        $('#del_form').append('<input type="hidden" name="class_id" id="class_id" value="'+ $(this).attr('data-class-id') +'" />');
+        $('#confirm').find('.modal-body').html("Are you sure you want to delete class?");
+    })
+
+    $("#del_form").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'classDelete' %}",
+            data: {
+                class_id:$('#class_id').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (response) {
+                $("#del_form").trigger('reset');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    });
+
+    $("#add-student").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'studentIndex' %}",
+            data: {
+                admission_no:$('#admission_no').val(),
+                roll_no:$('#roll_no').val(),
+                class_id:$('#class_id').val(),
+                section_id:$('#section_id').val(),
+                academic_year:$('#academic_year').val(),
+                first_name:$('#first_name').val(),
+                last_name:$('#last_name').val(),
+                gender:$('#gender').val(),
+                dob:$('#dob').val(),
+                admission_data:$('#admission_data').val(),
+                father_name:$('#father_name').val(),
+                mother_name:$('#mother_name').val(),
+                father_mobile:$('#father_mobile').val(),
+                mother_mobile:$('#mother_mobile').val(),
+                address:$('#address').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (response) {
+                $("#add-student").trigger('reset');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    });
+</script>
