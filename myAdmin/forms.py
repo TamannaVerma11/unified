@@ -19,7 +19,7 @@ class AddClassForm(BaseForm):
         model = Class
         fields = ['class_name']
         widgets = {
-            'class_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Number'}),
+            'class_name' : forms.TextInput(attrs={'class' : 'form-control mb-3', 'placeholder' : 'Enter Class'}),
         }
 
 class AddSectionForm(BaseForm):
@@ -30,6 +30,13 @@ class AddSectionForm(BaseForm):
             'section_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Section Name'})
         }
 
+class AddMediumForm(BaseForm):
+    class Meta:
+        model = Medium
+        fields = ['medium_name']
+        widgets = {
+            'medium_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Medium'})
+        }
 
     
 

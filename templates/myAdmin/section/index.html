@@ -14,7 +14,7 @@
                         {% endif %}
                         <div class="QA_section">
                             <div class="white_box_tittle list_header">
-                                <h4>Class List</h4>
+                                <h4>Section List</h4>
                                 <div class="box_right d-flex lms_block">
                                     <div class="serach_field_2">
                                         <div class="search_inner">
@@ -27,14 +27,25 @@
                                         </div>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="{% url 'mediumIndex' %}" class="btn_1">Add medium</a>
+                                        <a href="{% url 'sectionIndex' %}" data-bs-toggle="modal" class="btn_1">Add Section</a>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_section" class="btn_1">Add Section</a>
+                                        <a href="{% url 'classIndex' %}" data-bs-toggle="modal" class="btn_1">Add Class</a>
                                     </div>
-                                    <div class="add_button ms-2">
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_class" class="btn_1">Add Class</a>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class="card_box box_shadow position-relative mb_10">
+                                <div class="">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {% for form in section_form %}
+                                            <div class="row mb-3">
+                                                {{form}}
+                                            </div>
+                                        {% endfor %}
+                                        <button type="submit" class="btn btn-primary" style="float:right">Add +</button>
+                                        
+                                    </form>
                                 </div>
                             </div>
                             <div class="QA_table mb_30">
@@ -43,30 +54,16 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">S. No.</th>
-                                            <th scope="col">Class Name</th>
-                                            <th scope="col">Medium</th>
                                             <th scope="col">Section</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for class in classes %}
+                                        {% for section in sections %}
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
-                                                <td>{{ class.class_name }}</td>
-                                                <td>{{ class.medium_id.medium_name }}</td>
-                                                <td>
-                                                    {% for data in class_section %}
-                                                        {% if class.adminbase_ptr_id == data.class_id_id %}
-                                                            {% for section in sections %}
-                                                                {% if section.adminbase_ptr_id  == data.section_id_id %}
-                                                                    {{section.section_name}} {% if forloop.counter != 0 %} ,{% endif %}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{class.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm"></i>  </td>
+                                                <td>{{ section.section_name }}</td>
+                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{section.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'sectionDelete' id=section.adminbase_ptr_id %}" data-type="section"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -91,7 +88,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Proceed</button>
+                    <a class="btn btn-primary del-button">Proceed</a>
                 </div>
             </form>
         </div>

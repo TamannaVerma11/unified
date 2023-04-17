@@ -11,6 +11,13 @@ class AdminBase(models.Model):
 class Login(User):
     pass
 
+class Medium(AdminBase):
+    medium_name =  models.CharField(max_length=50)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'medium'
+
 class Section(AdminBase):
     section_name = models.CharField(max_length=50)
     created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
@@ -20,6 +27,7 @@ class Section(AdminBase):
 
 class Class(AdminBase):
     class_name = models.CharField(max_length=100)
+    medium_id = models.ForeignKey(Medium, null=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
@@ -42,6 +50,13 @@ class Parent(AdminBase):
     
     class Meta:
         db_table = 'parent'
+
+class Categories(AdminBase):
+    category_name = models.CharField(max_length=100)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'categories'
 
 class Student(AdminBase):
     admission_no =models.CharField(max_length=200)
@@ -88,3 +103,14 @@ class Teacher(AdminBase):
 
     class Meta:
         db_table = 'teacher'
+
+class APIs(AdminBase):
+    api_name = models.CharField(max_length=100)
+    protocol = models.CharField(max_length=50, null=True)
+    base_url = models.CharField(max_length=200, null=True)
+    api_url = models.CharField(max_length=500, null=True)
+    api_method = models.CharField(max_length=50, null=True)
+    product_type = models.CharField(max_length=50, null=True)
+
+    class Meta:
+        db_table = 'apis'

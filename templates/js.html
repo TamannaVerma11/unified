@@ -41,8 +41,8 @@
 <script src="{% static 'js/dashboard_init.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
 <script>
-    $("#add-section").submit(function (e) {
-        e.preventDefault();
+    $("#add-section").submit(function () {
+        
         var serializedData = $(this).serialize();
         $.ajax({
             type: 'POST',
@@ -63,53 +63,11 @@
         })
     });
 
-    $("#add-class").submit(function (e) {
-        e.preventDefault();
-        var serializedData = $(this).serialize();
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'classIndex' %}",
-            data: {
-                class_name:$('#id_class_name').val(),
-                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-                action: 'post',
-                section_id: $('#id_section_id').val(),
-                form_type: 'class'
-            },
-            success: function (response) {
-                $("#add-class").trigger('reset');
-                location.reload();
-            },
-            error: function (response) {
-                alert(response["responseJSON"]["error"]);
-            }
-        })
-    });
-
     $(".fa-trash").click(function() {
-        $('#del_form').append('<input type="hidden" name="class_id" id="class_id" value="'+ $(this).attr('data-class-id') +'" />');
-        $('#confirm').find('.modal-body').html("Are you sure you want to delete class?");
+        $('#confirm').find('.modal-body').html("Are you sure you want to delete "+$(this).attr("data-type")+"?");
+        $('#confirm').find('.del-button').attr("href", $(this).attr("data-url"));
     })
 
-    $("#del_form").submit(function (e) {
-        e.preventDefault();
-        var serializedData = $(this).serialize();
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'classDelete' %}",
-            data: {
-                class_id:$('#class_id').val(),
-                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-            },
-            success: function (response) {
-                $("#del_form").trigger('reset');
-                location.reload();
-            },
-            error: function (response) {
-                alert(response["responseJSON"]["error"]);
-            }
-        })
-    });
 
     $("#add-student").submit(function (e) {
         e.preventDefault();

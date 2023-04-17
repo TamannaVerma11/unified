@@ -6,9 +6,8 @@
             <div class="sidebar_icon d-lg-none">
                <i class="ti-menu"></i>
             </div>
-            <label class="form-label switch_toggle d-none d-lg-block" for="checkbox">
-               <input type="checkbox" id="checkbox">
-               <div class="slider round open_miniSide"></div>
+            <label class="form-label switch_toggle d-none d-lg-block" for="checkbox" style="display:none">
+               
             </label>
             <div class="header_right d-flex justify-content-between align-items-center">
                <div class="header_notification_warp d-flex align-items-center">
@@ -111,9 +110,9 @@
                         </div>
                      </div>
                   </li>
-                  <li>
+                  {% comment %} <li>
                      <a class="CHATBOX_open" href="#"> <img src="{% static 'img/icon/msg.svg' %}" alt=""> <span>2</span> </a>
-                  </li>
+                  </li> {% endcomment %}
                </div>
                <div class="profile_info">
                   <img src="{% static 'img/client_img.png' %}" alt="#">
