@@ -30,11 +30,41 @@
                                         <a href="{% url 'mediumIndex' %}" class="btn_1">Add medium</a>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_section" class="btn_1">Add Section</a>
+                                        <a href="{% url 'sectionIndex' %}" class="btn_1">Add Section</a>
                                     </div>
-                                    <div class="add_button ms-2">
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_class" class="btn_1">Add Class</a>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class="card_box box_shadow position-relative mb_10">
+                                <div class="">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {% for form in class_form %}
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    {{form}}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <select class="form-control" name="medium_id">
+                                                    <option value="">Select Medium</option>
+                                                    {% for medium in mediums %}
+                                                        <option value="{{ medium.adminbase_ptr_id }}">{{ medium.medium_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control select" name="section_id[]" multiple>
+                                                    {% for section in sections %}
+                                                        <option value="{{ section.adminbase_ptr_id }}">{{ section.section_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" style="float:right">Add +</button>
+                                        
+                                    </form>
                                 </div>
                             </div>
                             <div class="QA_table mb_30">
@@ -66,7 +96,7 @@
                                                         {% endif %}
                                                     {% endfor %}
                                                 </td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{class.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm"></i>  </td>
+                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{class.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'classDelete' id=class.adminbase_ptr_id %}" data-type="class"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -91,7 +121,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Proceed</button>
+                    <a class="btn btn-primary del-button">Proceed</a>
                 </div>
             </form>
         </div>

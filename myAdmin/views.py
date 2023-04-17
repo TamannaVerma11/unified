@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.urls import reverse
+from django.forms.models import model_to_dict
 
 # Create your views here.
 
@@ -42,59 +43,46 @@ def classIndex(request):
     class_section = ClassSection.objects.all()
     mediums = Medium.objects.filter(created_by = request.user.id)
     class_form = forms.AddClassForm()
-    section_form = forms.AddSectionForm()
-    medium_form = forms.AddMediumForm()
     if request.method == "POST":
         response_data = {}
-    
-        if request.POST.get('form_type')  == 'section':
-            section_name = request.POST.get('section_name')
-            created_by = request.user
 
-            response_data['section_name'] = section_name
+        class_name = request.POST.get('class_name')
+        sections = request.POST.getlist('section_id[]')
+        medium = request.POST.get('medium_id')
+        created_by = request.user
+        # url = "https://lms.tabschool.in/app/api/add-class?name="+class_name+"&user_id="+str(request.user.id)
+        # headers={}
+        # requests.get(url,headers=headers)
 
-            Section.objects.create(
-                section_name = section_name,
-                created_by = created_by,
-                )
-            messages.success(request, 'Section added successfully')
-        if request.POST.get('form_type') == 'medium':
-            response_data['medium_name'] = request.POST.get('medium_name')
+        response_data['class_name'] = class_name
+        response_data['section_id'] = sections
+        response_data['medium_id'] = medium
 
-            Medium.objects.create(
-                medium_name = request.POST.get('medium_name'),
-                created_by = request.user
+        add_class = Class.objects.create(
+            class_name = class_name,
+            created_by = created_by,
+            medium_id_id = medium
             )
-            messages.success(request, 'Medium added successfully')
-        if request.POST.get('form_type') == 'class':
-            class_name = request.POST.get('class_name')
-            sections = request.POST.getlist('section_id[]')
-            medium = request.POST.get('medium_id')
-            created_by = request.user
-            # url = "https://lms.tabschool.in/app/api/add-class?name="+class_name+"&user_id="+str(request.user.id)
-            # headers={}
-            # requests.get(url,headers=headers)
+        
+        for section in sections:
+            ClassSection.objects.create(
+                class_id_id  = add_class.id,
+                section_id_id = section,
+            )
+        messages.success(request, 'Class added successfully')
 
-            response_data['class_name'] = class_name
-            response_data['section_id'] = sections
-            response_data['medium_id'] = medium
+    return render(request, app_name+"\classes\index.html", context={'class_form' : class_form, 'sections' : sections, 'classes' : classes, 'class_section' : class_section, 'mediums' : mediums})
 
-            add_class = Class.objects.create(
-                class_name = class_name,
-                created_by = created_by,
-                medium_id_id = medium
-                )
-            
-            for section in sections:
-                ClassSection.objects.create(
-                    class_id_id  = add_class.id,
-                    section_id_id = section,
-                )
-            messages.success(request, 'Class added successfully')
+@login_required(login_url='login_user')
+def classDelete(request, id):
+    class_data = Class.objects.get(adminbase_ptr_id  = id)
+    class_data.delete()
+    messages.success(request, "Class deleted Successfully")
+    return redirect('classIndex')
 
-        return JsonResponse({"response_data" : response_data}, status = 200)
-    else:
-        return render(request, app_name+"\classes\index.html", context={'class_form' : class_form, 'section_form' : section_form, 'sections' : sections, 'classes' : classes, 'class_section' : class_section, 'medium_form' : medium_form, 'mediums' : mediums})
+@login_required(login_url='login_user')
+def classEdit(request, id):
+    return
 
 @login_required(login_url='login_user')
 def mediumIndex(request):
@@ -111,6 +99,30 @@ def mediumIndex(request):
         messages.success(request, 'Medium added successfully')
     return render(request, app_name+"\medium\index.html", {"mediums" : mediums, "medium_form" : medium_form})
 
+@login_required(login_url="login_user")
+def mediumDelete(request, id):
+    medium = Medium.objects.get(adminbase_ptr_id = id)
+    medium.delete()
+    messages.success(request, "Medium deleted Successfully")
+    return redirect('mediumIndex')
+
+@login_required(login_url='login_user')
+def mediumEdit(request, id):
+    medium = Medium.objects.get(adminbase_ptr_id = id)
+    medium_form = forms.AddMediumForm(instance=medium)
+    return JsonResponse({'medium_form' : medium_form.as_p()}, status = 200)
+
+@login_required(login_url="login_user")
+def mediumUpdate(request):
+    if request.method == "POST":
+        Medium.objects.filter(adminbase_ptr_id = request.POST.get('id')).update(
+            medium_name = request.POST.get('medium_name')
+        )
+        messages.success(request, 'Medium updated successfully')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('mediumIndex')
+
 @login_required(login_url='login_user')
 def sectionIndex(request):
     sections = Section.objects.filter(created_by = request.user.id)
@@ -124,14 +136,7 @@ def sectionIndex(request):
             created_by = request.user
         )
         messages.success(request, 'Section added successfully')
-    return render(request, app_name+"\medium\index.html", {"sections" : sections, "section_form" : section_form})
-
-@login_required(login_url="login_user")
-def mediumDelete(request, id):
-    medium = Medium.objects.get(adminbase_ptr_id = id)
-    medium.delete()
-    messages.success(request, "Medium deleted Successfully")
-    return redirect('mediumIndex')
+    return render(request, app_name+"\section\index.html", {"sections" : sections, "section_form" : section_form})
 
 @login_required(login_url="login_user")
 def sectionDelete(request, id):
@@ -141,10 +146,21 @@ def sectionDelete(request, id):
     return redirect('sectionIndex')
 
 @login_required(login_url='login_user')
-def classDelete(request):
-    class_data = Class.objects.get(adminbase_ptr_id  = request.POST.get('class_id'))
-    class_data.delete()
-    return JsonResponse({"message" : "Class deleted successfully"}, status = 200)
+def sectionEdit(request, id):
+    section = Section.objects.get(adminbase_ptr_id = id)
+    section_form = forms.AddSectionForm(instance=section)
+    return JsonResponse({'section_form' : section_form.as_p()}, status = 200)
+
+@login_required(login_url="login_url")
+def sectionUpdate(request):
+    if request.method == "POST":
+        Section.objects.filter(adminbase_ptr_id = request.POST.get('id')).update(
+            section_name = request.POST.get('section_name')
+        )
+        messages.success(request, 'Section updated successfully')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('sectionIndex')
 
 @login_required(login_url='login_user')
 def studentIndex(request):

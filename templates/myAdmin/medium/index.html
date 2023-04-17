@@ -63,7 +63,7 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ medium.medium_name }}</td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.adminbase_ptr_id %}" data-type="medium"></i>  </td>
+                                                <td><i class="fas fa-edit editmedium" data-bs-toggle="modal" data-bs-target="#edit-medium" data-url="{% url 'mediumEdit' id=medium.adminbase_ptr_id %}" data-id={{ medium.adminbase_ptr_id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.adminbase_ptr_id %}" data-type="medium"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -89,6 +89,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <a class="btn btn-primary del-button">Proceed</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-medium" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <form id="del_form" method="post" action="{% url 'mediumUpdate' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'mediumIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Update</button>
                 </div>
             </form>
         </div>

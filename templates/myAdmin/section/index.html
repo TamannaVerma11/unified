@@ -27,10 +27,10 @@
                                         </div>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="{% url 'sectionIndex' %}" data-bs-toggle="modal" class="btn_1">Add Section</a>
+                                        <a href="{% url 'mediumIndex' %}" class="btn_1">Add Medium</a>
                                     </div>
                                     <div class="add_button ms-2">
-                                        <a href="{% url 'classIndex' %}" data-bs-toggle="modal" class="btn_1">Add Class</a>
+                                        <a href="{% url 'classIndex' %}" class="btn_1">Add Class</a>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ section.section_name }}</td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{section.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'sectionDelete' id=section.adminbase_ptr_id %}" data-type="section"></i>  </td>
+                                                <td><i class="fas fa-edit editsection" data-bs-toggle="modal" data-bs-target="#edit-section" data-url="{% url 'sectionEdit' id=section.adminbase_ptr_id %}" data-id={{ section.adminbase_ptr_id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{section.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'sectionDelete' id=section.adminbase_ptr_id %}" data-type="section"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -89,6 +89,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <a class="btn btn-primary del-button">Proceed</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-section" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <form id="del_form" method="post" action="{% url 'sectionUpdate' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'sectionIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Update</button>
                 </div>
             </form>
         </div>

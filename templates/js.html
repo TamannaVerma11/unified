@@ -68,6 +68,37 @@
         $('#confirm').find('.del-button').attr("href", $(this).attr("data-url"));
     })
 
+    $(".editsection").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-section").find('.modal-body').html(response.section_form);
+                $("#edit-section").find('label').attr('style', 'display:none');
+                $("#edit-section").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-section').find('.modal-bodyy').html('Oops somethinng went wrong');
+            }
+        })
+    })
+
+    $(".editmedium").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-medium").find('.modal-body').html(response.medium_form);
+                $("#edit-medium").find('label').attr('style', 'display:none');
+                $("#edit-medium").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-medium').find('.modal-bodyy').html('Oops somethinng went wrong');
+            }
+        })
+    })
 
     $("#add-student").submit(function (e) {
         e.preventDefault();
