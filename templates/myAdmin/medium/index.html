@@ -16,36 +16,9 @@
                             <div class="white_box_tittle list_header">
                                 <h4>Medium List</h4>
                                 <div class="box_right d-flex lms_block">
-                                    <div class="serach_field_2">
-                                        <div class="search_inner">
-                                            <form Active="#">
-                                                <div class="search_field">
-                                                    <input type="text" placeholder="Search content here...">
-                                                </div>
-                                                <button type="submit"> <i class="ti-search"></i> </button>
-                                            </form>
-                                        </div>
-                                    </div>
                                     <div class="add_button ms-2">
-                                        <a href="{% url 'sectionIndex' %}" class="btn_1">Add Section</a>
+                                        <a data-bs-toggle="modal" data-bs-target="#add-medium" class="btn_1">Add Medium +</a>
                                     </div>
-                                    <div class="add_button ms-2">
-                                        <a href="{% url 'classIndex' %}" class="btn_1">Add Class</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card_box box_shadow position-relative mb_10">
-                                <div class="">
-                                    <form method="post">
-                                        {% csrf_token %}
-                                        {% for form in medium_form %}
-                                            <div class="row mb-3">
-                                                {{form}}
-                                            </div>
-                                        {% endfor %}
-                                        <button type="submit" class="btn btn-primary" style="float:right">Add +</button>
-                                        
-                                    </form>
                                 </div>
                             </div>
                             <div class="QA_table mb_30">
@@ -55,6 +28,7 @@
                                         <tr>
                                             <th scope="col">S. No.</th>
                                             <th scope="col">Medium</th>
+                                            <th scope="col">Sync</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
@@ -63,6 +37,7 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ medium.medium_name }}</td>
+                                                <td><span class="badge rounded-pill {% if medium.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if medium.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
                                                 <td><i class="fas fa-edit editmedium" data-bs-toggle="modal" data-bs-target="#edit-medium" data-url="{% url 'mediumEdit' id=medium.id %}" data-id={{ medium.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.id %}" data-type="medium"></i>  </td>
                                             </tr>
                                         {% endfor %}
@@ -80,11 +55,11 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title">Are you Sure?</h5>
             </div>
             <form id="del_form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -98,8 +73,9 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title">Edit Medium</h5>
             </div>
-            <form id="del_form" method="post" action="{% url 'mediumUpdate' %}">
+            <form id="edit_form" method="post" action="{% url 'mediumUpdate' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     
@@ -112,4 +88,48 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="add-medium" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Medium</h5>
+            </div>
+            <form id="add_form" method="post" action="{% url 'mediumIndex' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% for form in medium_form %}
+                        <div class="row mb-3">
+                            <label class="form-label col-sm-3 col-form-label">{{form.label}}:</label>
+                            <div class="col-sm-9">
+                                {{form}}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'mediumIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block js %}
+<script>
+    $(".editmedium").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-medium").find('.modal-body').html(response.medium_form);
+                $("#edit-medium").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-medium').find('.modal-body').html('Oops something went wrong!');
+            }
+        })
+    })
+</script>
 {% endblock  %}

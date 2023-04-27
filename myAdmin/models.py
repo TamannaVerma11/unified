@@ -30,13 +30,18 @@ class School(models.Model):
 
 class Medium(models.Model):
     medium_name =  models.CharField(max_length=50)
+    is_synced = models.IntegerField(null=True, default=0)
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'medium'
 
+    def __str__(self):
+        return self.medium_name
+
 class Section(models.Model):
     section_name = models.CharField(max_length=50)
+    is_synced = models.IntegerField(null=True, default=0)
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
@@ -45,6 +50,7 @@ class Section(models.Model):
 class Class(models.Model):
     class_name = models.CharField(max_length=100)
     medium = models.ForeignKey(Medium, null=True, on_delete=models.CASCADE)
+    is_synced = models.IntegerField(null=True, default=0)
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
@@ -72,6 +78,7 @@ class Parent(models.Model):
 
 class Categories(models.Model):
     category_name = models.CharField(max_length=100)
+    is_synced = models.IntegerField(null=True, default=0)
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
@@ -90,6 +97,8 @@ class Student(models.Model):
     mobile = models.CharField(max_length=100)
     parent = models.ForeignKey(Parent, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    category = models.ForeignKey(Categories, null=True, on_delete=models.CASCADE)
+    is_synced = models.IntegerField(null=True, default=0)
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='user')
 
     class Meta:

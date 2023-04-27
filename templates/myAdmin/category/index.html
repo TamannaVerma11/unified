@@ -14,11 +14,11 @@
                         {% endif %}
                         <div class="QA_section">
                             <div class="white_box_tittle list_header">
-                                <h4>Section List</h4>
+                                <h4>Category List</h4>
                                 <div class="box_right d-flex lms_block">
                                     <div class="box_right d-flex lms_block">
                                         <div class="add_button ms-2">
-                                            <a data-bs-toggle="modal" data-bs-target="#add-section" class="btn_1">Add Section +</a>
+                                            <a data-bs-toggle="modal" data-bs-target="#add-category" class="btn_1">Add Category +</a>
                                         </div>
                                     </div>
                                 </div>
@@ -29,18 +29,18 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">S. No.</th>
-                                            <th scope="col">Section</th>
+                                            <th scope="col">Category</th>
                                             <th scope="col">Sync</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for section in sections %}
+                                        {% for category in categories %}
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
-                                                <td>{{ section.section_name }}</td>
-                                                <td><span class="badge rounded-pill {% if section.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if section.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
-                                                <td><i class="fas fa-edit editsection" data-bs-toggle="modal" data-bs-target="#edit-section" data-url="{% url 'sectionEdit' id=section.id %}" data-id={{ section.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{section.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'sectionDelete' id=section.id %}" data-type="section"></i>  </td>
+                                                <td>{{ category.category_name }}</td>
+                                                <td><span class="badge rounded-pill {% if category.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if category.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit editcategory" data-bs-toggle="modal" data-bs-target="#edit-category" data-url="{% url 'categoryEdit' id=category.id %}" data-id={{ category.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{category.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'categoryDelete' id=category.id %}" data-type="category"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -71,16 +71,16 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="add-section" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="add-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Section</h5>
+                <h5 class="modal-title">Add Category</h5>
             </div>
-            <form id="add_form" method="post" action="{% url 'sectionIndex' %}">
+            <form id="add_form" method="post" action="{% url 'categoryIndex' %}">
                 {% csrf_token %}
                 <div class="modal-body">
-                    {% for form in section_form %}
+                    {% for form in category_form %}
                         <div class="row mb-3">
                             <label class="form-label col-sm-3 col-form-label">{{form.label}}:</label>
                             <div class="col-sm-9">
@@ -90,26 +90,26 @@
                     {% endfor %}
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'sectionIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <a href="{% url 'categoryIndex' %}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary del-button">Add</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<div class="modal fade" id="edit-section" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="edit-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Section</h5>
+                <h5 class="modal-title">Edit Category</h5>
             </div>
-            <form id="edit_form" method="post" action="{% url 'sectionUpdate' %}">
+            <form id="edit_form" method="post" action="{% url 'categoryUpdate' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'sectionIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <a href="{% url 'categoryIndex' %}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary del-button">Update</button>
                 </div>
             </form>
@@ -119,17 +119,17 @@
 {% endblock  %}
 {% block js %}
 <script>
-    $(".editsection").click(function(){
+    $(".editcategory").click(function(){
         var id = $(this).attr("data-id");
         $.ajax({
             type: 'GET',
             url: $(this).attr("data-url"),
             success: function(response) {
-                $("#edit-section").find('.modal-body').html(response.section_form);
-                $("#edit-section").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+                $("#edit-category").find('.modal-body').html(response.category_form);
+                $("#edit-category").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
             },
             error: function(response) {
-                $('#edit-section').find('.modal-body').html('Oops something went wrong!');
+                $('#edit-category').find('.modal-body').html('Oops something went wrong!');
             }
         })
     })

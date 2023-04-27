@@ -16,55 +16,11 @@
                             <div class="white_box_tittle list_header">
                                 <h4>Class List</h4>
                                 <div class="box_right d-flex lms_block">
-                                    <div class="serach_field_2">
-                                        <div class="search_inner">
-                                            <form Active="#">
-                                                <div class="search_field">
-                                                    <input type="text" placeholder="Search content here...">
-                                                </div>
-                                                <button type="submit"> <i class="ti-search"></i> </button>
-                                            </form>
+                                    <div class="box_right d-flex lms_block">
+                                        <div class="add_button ms-2">
+                                            <a data-bs-toggle="modal" data-bs-target="#add-class" class="btn_1">Add Class +</a>
                                         </div>
                                     </div>
-                                    <div class="add_button ms-2">
-                                        <a href="{% url 'mediumIndex' %}" class="btn_1">Add medium</a>
-                                    </div>
-                                    <div class="add_button ms-2">
-                                        <a href="{% url 'sectionIndex' %}" class="btn_1">Add Section</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card_box box_shadow position-relative mb_10">
-                                <div class="">
-                                    <form method="post">
-                                        {% csrf_token %}
-                                        {% for form in class_form %}
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    {{form}}
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="medium_id">
-                                                    <option value="">Select Medium</option>
-                                                    {% for medium in mediums %}
-                                                        <option value="{{ medium.adminbase_ptr_id }}">{{ medium.medium_name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <select class="form-control select" name="section_id[]" multiple>
-                                                    {% for section in sections %}
-                                                        <option value="{{ section.adminbase_ptr_id }}">{{ section.section_name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" style="float:right">Add +</button>
-                                        
-                                    </form>
                                 </div>
                             </div>
                             <div class="QA_table mb_30">
@@ -76,6 +32,7 @@
                                             <th scope="col">Class Name</th>
                                             <th scope="col">Medium</th>
                                             <th scope="col">Section</th>
+                                            <th scope="col">Sync</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
@@ -84,19 +41,20 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ class.class_name }}</td>
-                                                <td>{{ class.medium_id.medium_name }}</td>
+                                                <td>{{ class.medium.medium_name }}</td>
                                                 <td>
                                                     {% for data in class_section %}
-                                                        {% if class.adminbase_ptr_id == data.class_id_id %}
+                                                        {% if class.id == data.school_class_id %}
                                                             {% for section in sections %}
-                                                                {% if section.adminbase_ptr_id  == data.section_id_id %}
+                                                                {% if section.id  == data.section_id %}
                                                                     {{section.section_name}} {% if forloop.counter != 0 %} ,{% endif %}
                                                                 {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
                                                     {% endfor %}
                                                 </td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{class.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'classDelete' id=class.adminbase_ptr_id %}" data-type="class"></i>  </td>
+                                                <td><span class="badge rounded-pill {% if class.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if class.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit editclass" data-bs-toggle="modal" data-bs-target="#edit-class" data-url="{% url 'classEdit' id=class.id %}" data-id={{ class.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{class.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'classDelete' id=class.id %}" data-type="class"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -113,11 +71,11 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title">Are you Sure?</h5>
             </div>
             <form id="del_form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -127,4 +85,78 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="add-class" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Class</h5>
+            </div>
+            <form id="add_form" method="post" action="{% url 'classIndex' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% for form in class_form %}
+                        <div class="row mb-3">
+                            <label class="form-label col-sm-3 col-form-label">{{form.label}}:</label>
+                            <div class="col-sm-9">
+                                {{form}}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="row mb-3">
+                        <label class="form-label col-sm-3 col-form-label">Section:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control select" name="section_id[]" multiple>
+                                {% for section in sections %}
+                                    <option value="{{ section.id }}">{{ section.section_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'classIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-class" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Class</h5>
+            </div>
+            <form id="edit_form" method="post" action="{% url 'classUpdate' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'classIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock  %}
+{% block js %}
+<script>
+    $(".editclass").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-class").find('.modal-body').html(response.class_form);
+                $("#edit-class").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-class').find('.modal-body').html('Oops something went wrong!');
+            }
+        })
+    })
+</script>
+{% endblock  %}
+

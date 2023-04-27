@@ -19,35 +19,50 @@
                   </div>
                </a>
             </li>
-            <li>
-               <a href="{% url 'classIndex' %}" aria-expanded="false">
-                  <div class="nav_icon_small">
-                     <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
-                  </div>
-                  <div class="nav_title">
-                     <span>Classes </span>
-                  </div>
+            <li class="">
+               <a class="has-arrow" href="#" aria-expanded="false">
+               <div class="nav_icon_small">
+                  <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
+               </div>
+               <div class="nav_title">
+                  <span>Academics</span>
+               </div>
                </a>
+               <ul>
+                  <li><a href="{% url 'mediumIndex' %}">Medium</a></li>
+                  <li><a href="{% url 'sectionIndex' %}">Section</a></li>
+                  <li><a href="{% url 'classIndex' %}">Class</a></li>
+               </ul>
             </li>
-            <li>
-               <a href="{% url 'studentIndex' %}" aria-expanded="false">
-                  <div class="nav_icon_small">
-                     <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
-                  </div>
-                  <div class="nav_title">
-                     <span>Students </span>
-                  </div>
+            <li class="">
+               <a class="has-arrow" href="#" aria-expanded="false">
+               <div class="nav_icon_small">
+                  <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
+               </div>
+               <div class="nav_title">
+                  <span>Students</span>
+               </div>
                </a>
+               <ul>
+                  <li><a href="{% url 'studentIndex' %}">Student Admission</a></li>
+                  <li><a href="{% url 'categoryIndex' %}">Category</a></li>
+               </ul>
             </li>
-            <li>
-               <a href="{% url 'teacherIndex' %}" aria-expanded="false">
-                  <div class="nav_icon_small">
-                     <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
-                  </div>
-                  <div class="nav_title">
-                     <span>Teachers </span>
-                  </div>
+            <li class="">
+               <a class="has-arrow" href="#" aria-expanded="false">
+               <div class="nav_icon_small">
+                  <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
+               </div>
+               <div class="nav_title">
+                  <span>Teacher</span>
+               </div>
                </a>
+               <ul>
+                  <li><a href="{% url 'teacherIndex' %}">Teachers List</a></li>
+                  <li><a href="{% url 'teacherIndex' %}">Departments</a></li>
+                  <li><a href="{% url 'teacherIndex' %}">Roles</a></li>
+                  <li><a href="{% url 'teacherIndex' %}">Designation</a></li>
+               </ul>
             </li>
             <li>
                <a href="https://ais.tabschool.in/ais-user-login?email=Admin@tabschool.in" aria-expanded="false" target="_blank">

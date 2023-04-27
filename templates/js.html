@@ -64,7 +64,7 @@
     });
 
     $(".fa-trash").click(function() {
-        $('#confirm').find('.modal-body').html("Are you sure you want to delete "+$(this).attr("data-type")+"?");
+        $('#confirm').find('.modal-body').html("If you want to delete "+$(this).attr("data-type")+" click on <strong>Proceed</strong> to confirm and <strong>Cancel</strong> to exit.");
         $('#confirm').find('.del-button').attr("href", $(this).attr("data-url"));
     })
 

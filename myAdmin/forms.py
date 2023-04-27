@@ -30,6 +30,14 @@ class AddSectionForm(BaseForm):
             'section_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Section Name'})
         }
 
+class AddCategoryForm(BaseForm):
+    class Meta:
+        model = Categories
+        fields = ['category_name']
+        widgets = {
+            'category_name' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Category Name'})
+        }
+
 class AddMediumForm(BaseForm):
     class Meta:
         model = Medium

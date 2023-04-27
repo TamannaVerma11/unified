@@ -7,20 +7,15 @@
             <div class="col-lg-12">
                 <div class="white_card card_height_100 mb_30">
                     <div class="white_card_body">
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div  {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show alert" {% endif %}> {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+                            {% endfor %}
+                        {% endif %}
                         <div class="QA_section">
                             <div class="white_box_tittle list_header">
                                 <h4>Student List</h4>
                                 <div class="box_right d-flex lms_block">
-                                    <div class="serach_field_2">
-                                        <div class="search_inner">
-                                            <form Active="#">
-                                                <div class="search_field">
-                                                    <input type="text" placeholder="Search content here...">
-                                                </div>
-                                                <button type="submit"> <i class="ti-search"></i> </button>
-                                            </form>
-                                        </div>
-                                    </div>
                                     <div class="add_button ms-2">
                                         <a href="" data-bs-toggle="modal" data-bs-target="#add_student" class="btn_1">Add Student</a>
                                     </div>
@@ -36,6 +31,7 @@
                                             <th scope="col">Phone</th>
                                             <th scope="col">Class</th>
                                             <th scope="col">Section</th>
+                                            <th scope="col">Sync</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -43,12 +39,13 @@
                                         {% for student in students %}
                                             <tr>
                                                 <td>{{ student.roll_no }}</td>
-                                                <td>{{ student.user_id.first_name }}</td>
-                                                <td>{{ student.user_id.last_name }}</td>
+                                                <td>{{ student.user.first_name }}</td>
+                                                <td>{{ student.user.last_name }}</td>
                                                 <td>{{ student.mobile }}</td>
-                                                <td>{{ student.class_id.class_name }}</td>
-                                                <td>{{ student.section_id.section_name }}</td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{student.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm"></i>  </td>
+                                                <td>{{ student.school_class.class_name }}</td>
+                                                <td>{{ student.section.section_name }}</td>
+                                                <td><span class="badge rounded-pill {% if student.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if student.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{student.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'studentDelete' id=student.id %}" data-type="student"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -87,7 +84,7 @@
                             <select id="class_id" name="class_id"  class="form-select">
                                 <option value="">Select Class</option>
                                 {% for classes in class_data %}
-                                    <option value="{{ classes.adminbase_ptr_id  }}">{{ classes.class_name }}</option>
+                                    <option value="{{ classes.id  }}">{{ classes.class_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -96,7 +93,7 @@
                             <select id="section_id" name="section_id"  class="form-select">
                                 <option value="">Select Section</option>
                                 {% for section in sections %}
-                                    <option value="{{ section.adminbase_ptr_id  }}">{{ section.section_name }}</option>
+                                    <option value="{{ section.id  }}">{{ section.section_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -116,17 +113,30 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label" for="gender">Gender</label>
-                            <input type="text" class="form-control" id="gender" name="gender">
+                            <select id="gender" name="gender"  class="form-select">
+                                <option value="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label" for="dob">Date of Birth</label>
                             <input type="date" class="form-control" id="dob" name="dob">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label" for="admission_data">Admission Date</label>
                             <input type="date" class="form-control" id="admission_data" name="admission_data">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="admission_data">Category</label>
+                            <select id="category_id" name="category_id"  class="form-select">
+                                <option value="">Select Category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id  }}">{{ category.category_name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -178,15 +188,15 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title">Are you Sure?</h5>
             </div>
             <form id="del_form">
                 {% csrf_token %}
                 <div class="modal-body">
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Proceed</button>
+                    <a class="btn btn-primary del-button">Proceed</a>
                 </div>
             </form>
         </div>
