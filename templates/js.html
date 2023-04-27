@@ -100,8 +100,7 @@
         })
     })
 
-    $("#add-student").submit(function (e) {
-        e.preventDefault();
+    $("#add-student").submit(function () {
         var serializedData = $(this).serialize();
         $.ajax({
             type: 'POST',

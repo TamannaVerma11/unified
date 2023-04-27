@@ -1,6 +1,5 @@
 from django import forms
 from .models import *
-from django.forms import inlineformset_factory
 
 class BaseForm(forms.ModelForm):
     pass
@@ -17,9 +16,10 @@ class LoginForm(BaseForm):
 class AddClassForm(BaseForm):
     class Meta:
         model = Class
-        fields = ['class_name']
+        fields = ['class_name', 'medium']
         widgets = {
             'class_name' : forms.TextInput(attrs={'class' : 'form-control mb-3', 'placeholder' : 'Enter Class'}),
+            'medium' : forms.Select(attrs={'class' : 'form-control mb-3', 'placeholder' : 'Enter Class'}),
         }
 
 class AddSectionForm(BaseForm):

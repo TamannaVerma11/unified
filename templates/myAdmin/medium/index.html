@@ -63,7 +63,7 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ medium.medium_name }}</td>
-                                                <td><i class="fas fa-edit editmedium" data-bs-toggle="modal" data-bs-target="#edit-medium" data-url="{% url 'mediumEdit' id=medium.adminbase_ptr_id %}" data-id={{ medium.adminbase_ptr_id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.adminbase_ptr_id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.adminbase_ptr_id %}" data-type="medium"></i>  </td>
+                                                <td><i class="fas fa-edit editmedium" data-bs-toggle="modal" data-bs-target="#edit-medium" data-url="{% url 'mediumEdit' id=medium.id %}" data-id={{ medium.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.id %}" data-type="medium"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
