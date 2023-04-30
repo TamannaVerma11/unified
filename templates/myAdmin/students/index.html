@@ -44,8 +44,8 @@
                                                 <td>{{ student.mobile }}</td>
                                                 <td>{{ student.school_class.class_name }}</td>
                                                 <td>{{ student.section.section_name }}</td>
-                                                <td><span class="badge rounded-pill {% if student.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if student.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
-                                                <td><i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{student.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'studentDelete' id=student.id %}" data-type="student"></i>  </td>
+                                                <td><span class="badge rounded-pill {% if student.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %} sync-data" data-url="{% url 'studentSync' id=student.id %}" data-id={{ student.id }}>{% if student.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit editstudent" data-bs-toggle="modal" data-bs-target="#edit-student" data-url="{% url 'studentEdit' id=student.id %}" data-id={{ student.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{student.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'studentDelete' id=student.id %}" data-type="student"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -72,107 +72,88 @@
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label class="form-label" for="admission_no">Admission No</label>
-                            <input type="text" class="form-control" id="admission_no" name="admission_no">
+                            <label class="form-label" for="admission_no">{{ student_form.admission_no.label }}</label>
+                            {{ student_form.admission_no }}
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label" for="roll_no">Roll No</label>
-                            <input type="text" class="form-control" id="roll_no" name="roll_no">
+                            <label class="form-label" for="roll_no">{{ student_form.roll_no.label }}</label>
+                            {{ student_form.roll_no }}
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label" for="class_id">Class</label>
-                            <select id="class_id" name="class_id"  class="form-select">
-                                <option value="">Select Class</option>
-                                {% for classes in class_data %}
-                                    <option value="{{ classes.id  }}">{{ classes.class_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label" for="class_id">{{ student_form.school_class.label }}</label>
+                            {{ student_form.school_class }}
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label" for="section_id">Section</label>
-                            <select id="section_id" name="section_id"  class="form-select">
-                                <option value="">Select Section</option>
-                                {% for section in sections %}
-                                    <option value="{{ section.id  }}">{{ section.section_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label" for="section_id">{{ student_form.section.label }}</label>
+                            {{ student_form.section }}
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label" for="academic_year">Academic Year</label>
-                            <input type="text" class="form-control" id="academic_year" name="academic_year">
+                            <label class="form-label" for="academic_year">{{ student_form.academic_year.label }}</label>
+                            {{ student_form.academic_year }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label" for="first_name">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name">
+                            <label class="form-label" for="first_name">{{ student_user_form.first_name.label }}</label>
+                            {{ student_user_form.first_name }}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="last_name">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name">
+                            <label class="form-label" for="last_name">{{ student_user_form.last_name.label }}</label>
+                            {{ student_user_form.last_name }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="form-label" for="gender">Gender</label>
-                            <select id="gender" name="gender"  class="form-select">
-                                <option value="">Select Gender</option>
-                                <option value="M">Male</option>
-                                <option value="F">Female</option>
-                            </select>
+                            <label class="form-label" for="gender">{{ student_form.gender.label }}</label>
+                            {{ student_form.gender }}
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label" for="dob">Date of Birth</label>
-                            <input type="date" class="form-control" id="dob" name="dob">
+                            <label class="form-label" for="dob">{{ student_form.dob.label }}</label>
+                            {{ student_form.dob }}
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label" for="admission_data">Admission Date</label>
-                            <input type="date" class="form-control" id="admission_data" name="admission_data">
+                            <label class="form-label" for="admission_data">{{ student_form.admission_data.label }}</label>
+                            {{ student_form.admission_data }}
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label" for="admission_data">Category</label>
-                            <select id="category_id" name="category_id"  class="form-select">
-                                <option value="">Select Category</option>
-                                {% for category in categories %}
-                                    <option value="{{ category.id  }}">{{ category.category_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label" for="admission_data">{{ student_form.category.label }}</label>
+                            {{ student_form.category }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label" for="father_name">Father Name</label>
-                            <input type="text" class="form-control" id="father_name" name="father_name">
+                            <label class="form-label" for="father_name">{{ parent_form.father_first_name.label }}</label>
+                            {{ parent_form.father_first_name }}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="mother_name">Mother Name</label>
-                            <input type="text" class="form-control" id="mother_name" name="mother_name">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label" for="father_mobile">Father's Mobile</label>
-                            <input type="text" class="form-control" id="father_mobile" name="father_mobile">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="mother_mobile">Mother's Mobile</label>
-                            <input type="text" class="form-control" id="mother_mobile" name="mother_mobile">
+                            <label class="form-label" for="mother_name">{{ parent_form.mother_first_name.label }}</label>
+                            {{ parent_form.mother_first_name }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label" for="father_email">Father's email</label>
-                            <input type="text" class="form-control" id="father_email" name="father_email">
+                            <label class="form-label" for="father_mobile">{{ parent_form.father_mobile.label }}</label>
+                            {{ parent_form.father_mobile }}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="mother_email">Mother's email</label>
-                            <input type="text" class="form-control" id="mother_email" name="mother_email">
+                            <label class="form-label" for="mother_mobile">{{ parent_form.mother_mobile.label }}</label>
+                            {{ parent_form.mother_mobile }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="father_email">{{ parent_form.father_email.label }}</label>
+                            {{ parent_form.father_email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mother_email">{{ parent_form.mother_email.label }}</label>
+                            {{ parent_form.mother_email }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label class="form-label" for="address">Address</label>
-                            <textarea class="form-control" maxlength="225" rows="3" name="address" id="address" placeholder=""></textarea>
+                            <label class="form-label" for="address">{{ student_form.address.label }}</label>
+                            {{ student_form.address }}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -202,4 +183,56 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="edit-student" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Student</h5>
+            </div>
+            <form id="edit_form" method="post" action="{% url 'studentUpdate' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'studentIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block js %}
+<script>
+    $(".editstudent").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-student").find('.modal-body').html(response.student_form);
+                $("#edit-student").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-student').find('.modal-body').html('Oops something went wrong!');
+            }
+        })
+    });
+
+    $(".sync-data").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $(".sync-data").removeClass("bg-danger")
+                $(".sync-data").addClass("bg-success")
+                $(".sync-data").html("Synced")
+            },
+            error: function(response) {
+            }
+        })
+    });
+</script>
 {% endblock  %}

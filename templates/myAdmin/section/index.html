@@ -39,7 +39,7 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ section.section_name }}</td>
-                                                <td><span class="badge rounded-pill {% if section.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if section.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><span class="badge rounded-pill {% if section.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %} sync-data" data-url="{% url 'sectionSync' id=section.id %}" data-id={{ section.id }}>{% if section.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
                                                 <td><i class="fas fa-edit editsection" data-bs-toggle="modal" data-bs-target="#edit-section" data-url="{% url 'sectionEdit' id=section.id %}" data-id={{ section.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{section.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'sectionDelete' id=section.id %}" data-type="section"></i>  </td>
                                             </tr>
                                         {% endfor %}
@@ -132,6 +132,21 @@
                 $('#edit-section').find('.modal-body').html('Oops something went wrong!');
             }
         })
-    })
+    });
+
+    $(".sync-data").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $(".sync-data").removeClass("bg-danger")
+                $(".sync-data").addClass("bg-success")
+                $(".sync-data").html("Synced")
+            },
+            error: function(response) {
+            }
+        })
+    });
 </script>
 {% endblock  %}

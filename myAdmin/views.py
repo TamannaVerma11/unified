@@ -3,11 +3,9 @@ from django.http import *
 from myAdmin.models import *
 from . import forms
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-from django.urls import reverse
-from django.forms.models import model_to_dict
 import requests
 import json
 # Create your views here.
@@ -23,26 +21,26 @@ def login_user(request):
             username = request.POST['username'],
             password = request.POST['password']
         )
-        # lms_url = "https://lms.tabschool.in/app/api/login?email="+user.email+"&password="+request.POST['password']
-        # lms_headers={}
-        # lms_response = requests.get(lms_url,headers=lms_headers)
-        # lms_response = json.loads(lms_response.text)
-        # if lms_response['code'] == 100:
-        #     SessionManager.objects.create(
-        #         token = lms_response['token'],
-        #         productType = 'lms',
-        #         user = user
-        #     )
-        # ais_url = "https://ais.tabschool.in/api/login?email=Admin@tabschool.in&password=123456"
-        # ais_headers={}
-        # ais_response = requests.get(ais_url,headers=ais_headers)
-        # ais_response = json.loads(ais_response.text)
-        # if ais_response['success'] == True:
-        #     SessionManager.objects.create(
-        #         token = ais_response['data']['accessToken'],
-        #         productType = 'ais',
-        #         user = user
-        #     )
+        lms_url = "https://lms.tabschool.in/app/api/login?email="+user.email+"&password="+request.POST['password']
+        lms_headers={}
+        lms_response = requests.get(lms_url,headers=lms_headers)
+        lms_response = json.loads(lms_response.text)
+        if lms_response['code'] == 100:
+            SessionManager.objects.create(
+                token = lms_response['token'],
+                productType = 'lms',
+                user = user
+            )
+        ais_url = "https://ais.tabschool.in/api/login?email=Admin@tabschool.in&password=123456"
+        ais_headers={}
+        ais_response = requests.get(ais_url,headers=ais_headers)
+        ais_response = json.loads(ais_response.text)
+        if ais_response['success'] == True:
+            SessionManager.objects.create(
+                token = ais_response['data']['accessToken'],
+                productType = 'ais',
+                user = user
+            )
         if user is not None:
             login(request,user)
             return HttpResponseRedirect('/dashboard')
@@ -115,8 +113,17 @@ def add_address(request):
     profile = Profile.objects.get(user = id)
     school = School.objects.get(user = id)
 
-    url = "https://lms.tabschool.in/app/api/user-create"
-    data = {
+    bus_url = "https://tracking.tabschool.in/api/school-store"
+    bus_data = {
+        'name': user.first_name, 
+        'email': user.email, 
+        'tel_number': profile.mobile, 
+        'password' : profile.plain_pass
+        }
+    bus_headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    requests.post(bus_url, data=json.dumps(bus_data), headers=bus_headers)
+    lms_url = "https://lms.tabschool.in/app/api/user-create"
+    lms_data = {
         'first_name': user.first_name, 
         'last_name': user.last_name, 
         'email': user.email, 
@@ -127,14 +134,19 @@ def add_address(request):
         'school_email': school.email, 
         'school_mobile': school.mobile, 
         }
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    requests.post(url, data=json.dumps(data), headers=headers)
+    lms_headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    requests.post(lms_url, data=json.dumps(lms_data), headers=lms_headers)
     return redirect("login_user")
-
 
 @login_required(login_url='login_user')
 def dashboard(request):
-    return render(request, app_name+"\index.html")
+    school_class = Class.objects.filter(creator = request.user.id)
+    school_class_count = Class.objects.filter(creator = request.user.id).count()
+    student = Student.objects.filter(creator = request.user.id)
+    student_count = Student.objects.filter(creator = request.user.id).count()
+    teacher = Teacher.objects.filter(creator = request.user.id)
+    teacher_count = Teacher.objects.filter(creator = request.user.id).count()
+    return render(request, app_name+"\index.html", {'school_class' : school_class, 'student' : student, 'teacher' : teacher, 'school_class_count' : school_class_count, 'student_count' : student_count, 'teacher_count' : teacher_count})
 
 @login_required(login_url='login_user')
 def classIndex(request):
@@ -150,33 +162,6 @@ def classIndex(request):
         sections = request.POST.getlist('section_id[]')
         medium = request.POST.get('medium')
         creator = request.user
-        # medium_data = Medium.objects.get(id = medium)
-
-        # lms_url = "https://lms.tabschool.in/app/api/add-class"
-        # data = {
-        #     'name' : class_name,
-        #     'medium_id': medium_data.lms_id,
-        #     }
-        # data['section_id'] = []
-        # for section in sections:
-        #     section_data = Section.objects.get(adminbase_ptr_id = section)
-        #     data['section_id'] = data['section_id'] + [section_data.lms_id]
-        # lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
-        # lms_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+lms_token.token}
-        # lms_response = requests.post(lms_url, data=json.dumps(data), headers=lms_headers)
-        # lms_response = json.loads(lms_response.text)
-        # ais_url = "https://ais.tabschool.in/api/class-store"
-        # ais_data = {
-        #     'name' : class_name,
-        #     }
-        # ais_data['section_id'] = []
-        # for section in sections:
-        #     section_data = Section.objects.get(adminbase_ptr_id = section)
-        #     ais_data['section_id'] = ais_data['section_id'] + [section_data.ais_id]
-        # ais_token = SessionManager.objects.get(user_id = request.user.id, productType = 'ais')
-        # ais_headers={'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":ais_token.token}
-        # ais_response = requests.post(ais_url, data=json.dumps(ais_data), headers=ais_headers)
-        # ais_response = json.loads(ais_response.text)
         response_data['class_name'] = class_name
         response_data['section_id'] = sections
         response_data['medium'] = medium
@@ -240,6 +225,41 @@ def classUpdate(request):
         messages.error(request, 'Oops, Something went worng')
     return redirect('classIndex')
 
+@login_required(login_url="login_user")
+def classSync(request, id):
+    school_class =  Class.objects.get(id = id)
+    sections  = ClassSection.objects.filter(school_class = id)
+    lms_url = "https://lms.tabschool.in/app/api/add-class"
+    data = {
+        'name' : school_class.class_name,
+        'medium_id': school_class.medium.id,
+        }
+    data['section_id'] = []
+    for section in sections:
+        section_data = Section.objects.get(id = section.section_id)
+        data['section_id'] = data['section_id'] + [section_data.id]
+    lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
+    lms_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+lms_token.token}
+    lms_response = requests.post(lms_url, data=json.dumps(data), headers=lms_headers)
+    lms_response = json.loads(lms_response.text)
+    ais_url = "https://ais.tabschool.in/api/class-store"
+    ais_data = {
+        'name' : school_class.class_name,
+        }
+    ais_data['section_id'] = []
+    for section in sections:
+        section_data = Section.objects.get(id = section.section_id)
+        ais_data['section_id'] = ais_data['section_id'] + [section_data.id]
+    ais_token = SessionManager.objects.get(user_id = request.user.id, productType = 'ais')
+    ais_headers={'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":ais_token.token}
+    ais_response = requests.post(ais_url, data=json.dumps(ais_data), headers=ais_headers)
+    ais_response = json.loads(ais_response.text)
+    if lms_response['status'] == 'success':
+        Class.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)
+
 @login_required(login_url='login_user')
 def mediumIndex(request):
     mediums = Medium.objects.filter(creator = request.user.id)
@@ -287,6 +307,20 @@ def mediumUpdate(request):
         messages.error(request, 'Oops, Something went worng')
     return redirect('mediumIndex')
 
+@login_required(login_url="login_user")
+def mediumSync(request, id):
+    medium = Medium.objects.get(id = id)
+    url = "https://lms.tabschool.in/app/api/add-medium?name="+medium.medium_name
+    token = SessionManager.objects.get(user_id = request.user.id, productType='lms')
+    headers={"Authorization":"Bearer "+token.token}
+    response = requests.get(url,headers=headers)
+    response = json.loads(response.text)
+    if response['status'] == 'success':
+        Medium.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)
+
 @login_required(login_url='login_user')
 def sectionIndex(request):
     sections = Section.objects.filter(creator = request.user.id)
@@ -294,16 +328,6 @@ def sectionIndex(request):
     if request.method == "POST":
         response_data = {}
         response_data['section_name'] = request.POST.get('section_name')
-        # lms_url = "https://lms.tabschool.in/app/api/add-section?name="+request.POST.get('section_name')
-        # lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
-        # lms_headers={"Authorization":"Bearer "+lms_token.token}
-        # lms_response = requests.get(lms_url,headers=lms_headers)
-        # lms_response = json.loads(lms_response.text)
-        # ais_url = "https://ais.tabschool.in/api/section-store?name="+request.POST.get('section_name')
-        # ais_token = SessionManager.objects.get(user_id = request.user.id, productType = 'ais')
-        # ais_headers={"Authorization":ais_token.token}
-        # ais_response = requests.post(ais_url,headers=ais_headers)
-        # ais_response = json.loads(ais_response.text)
         Section.objects.create(
             section_name = request.POST.get('section_name'),
             creator = request.user
@@ -339,6 +363,25 @@ def sectionUpdate(request):
         messages.error(request, 'Oops, Something went worng')
     return redirect('sectionIndex')
 
+@login_required(login_url="login_user")
+def sectionSync(request, id):
+    section = Section.objects.get(id = id)
+    lms_url = "https://lms.tabschool.in/app/api/add-section?name="+section.section_name
+    lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
+    lms_headers={"Authorization":"Bearer "+lms_token.token}
+    lms_response = requests.get(lms_url,headers=lms_headers)
+    lms_response = json.loads(lms_response.text)
+    ais_url = "https://ais.tabschool.in/api/section-store?name="+section.section_name
+    ais_token = SessionManager.objects.get(user_id = request.user.id, productType = 'ais')
+    ais_headers={"Authorization":ais_token.token}
+    ais_response = requests.post(ais_url,headers=ais_headers)
+    ais_response = json.loads(ais_response.text)
+    if lms_response['status'] == 'success':
+        Section.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)
+
 @login_required(login_url='login_user')
 def categoryIndex(request):
     categories = Categories.objects.filter(creator = request.user.id)
@@ -369,7 +412,7 @@ def categoryEdit(request, id):
         form_html += '<div class="row mb-3"><label class="form-label col-sm-3 col-form-label">' + str(form_data.label) + ':</label><div class="col-sm-9">' + str(form_data) + '</div></div>'
     return JsonResponse({'category_form' : form_html}, status = 200)
 
-@login_required(login_url="login_url")
+@login_required(login_url="login_user")
 def categoryUpdate(request):
     if request.method == "POST":
         Categories.objects.filter(id = request.POST.get('id')).update(
@@ -381,38 +424,31 @@ def categoryUpdate(request):
         messages.error(request, 'Oops, Something went worng')
     return redirect('categoryIndex')
 
+@login_required(login_url="login_user")
+def categorySync(request, id):
+    category = Categories.objects.get(id = id)
+    url = "https://lms.tabschool.in/app/api/add-category?name="+category.category_name
+    token = SessionManager.objects.get(user_id = request.user.id, productType='lms')
+    headers={"Authorization":"Bearer "+token.token}
+    response = requests.get(url,headers=headers)
+    print(response)
+    response = json.loads(response.text)
+    if response['status'] == 'success':
+        Categories.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)
+
 @login_required(login_url='login_user')
 def studentIndex(request):
     class_data = Class.objects.filter(creator = request.user.id)
     sections = Section.objects.filter(creator = request.user.id)
     students = Student.objects.filter(creator = request.user.id)
     categories = Categories.objects.filter(creator = request.user.id)
+    student_form = forms.AddStudentForm()
+    parent_form = forms.AddParentForm()
+    student_user_form = forms.AddStudentUserForm()
     if request.method == 'POST':
-        # class_data_api = Class.objects.get(adminbase_ptr = request.POST.get('class_id'))
-        # lms_url = "https://lms.tabschool.in/app/api/add-student"
-        # data = {
-        #     'father_first_name' : request.POST.get('father_name'),
-        #     'father_mobile': request.POST.get('father_mobile'),
-        #     'mother_first_name': request.POST.get('mother_name'),
-        #     'mother_mobile': request.POST.get('mother_mobile'),
-        #     'first_name': request.POST.get('first_name'),
-        #     'last_name': request.POST.get('last_name'),
-        #     'admission_no': request.POST.get('admission_no'),
-        #     'gender': request.POST.get('gender'),
-        #     'dob': request.POST.get('dob'),
-        #     'current_address': request.POST.get('address'),
-        #     'class_section_id': class_data_api.lms_id,
-        #     'category_id': 1,
-        #     'admission_no': request.POST.get('admission_no'),
-        #     'admission_date': request.POST.get('admission_data'),
-        #     'mother_email': request.POST.get('mother_email'),
-        #     'father_email': request.POST.get('father_email'),
-        #     }
-        # lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
-        # lms_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+lms_token.token}
-        # lms_response = requests.post(lms_url, data=json.dumps(data), headers=lms_headers)
-        # print(lms_response.text)
-        # lms_response = json.loads(lms_response.text)
         user = User.objects.create(
             username = request.POST.get('first_name'),
             first_name = request.POST.get('first_name'),
@@ -424,10 +460,10 @@ def studentIndex(request):
         )
 
         parent = Parent.objects.create(
-            mother_first_name = request.POST.get('mother_name'),
+            mother_first_name = request.POST.get('mother_first_name'),
             mother_mobile = request.POST.get('mother_mobile'),
             mother_email = request.POST.get('mother_email'),
-            father_first_name = request.POST.get('father_name'),
+            father_first_name = request.POST.get('father_first_name'),
             father_email = request.POST.get('father_email'),
             father_mobile = request.POST.get('father_mobile'),
         )
@@ -439,16 +475,16 @@ def studentIndex(request):
             dob = request.POST.get('dob'),
             admission_data = request.POST.get('admission_data'),
             mobile = request.POST.get('father_mobile'),
-            school_class = Class.objects.get(id = request.POST.get('class_id')),
+            school_class = Class.objects.get(id = request.POST.get('school_class')),
             creator_id = request.user.id,
             parent_id = parent.id,
             address = request.POST.get('address'),
             user_id = user.id,
-            category = Categories.objects.get(id = request.POST.get('category_id')),
-            section = Section.objects.get(id = request.POST.get('section_id')),
+            category = Categories.objects.get(id = request.POST.get('category')),
+            section = Section.objects.get(id = request.POST.get('section')),
         )
         messages.success(request, 'Student added successfully.')
-    return render(request, app_name+"\students\index.html", context={'class_data' : class_data, 'sections' : sections, 'students' : students, 'categories' : categories})
+    return render(request, app_name+"\students\index.html", context={'class_data' : class_data, 'sections' : sections, 'students' : students, 'categories' : categories, 'student_form' : student_form, 'parent_form' : parent_form, 'student_user_form' : student_user_form})
 
 @login_required(login_url='login_user')
 def studentDelete(request, id):
@@ -459,37 +495,329 @@ def studentDelete(request, id):
     messages.success(request, "Student deleted Successfully")
     return redirect('studentIndex')
 
+@login_required(login_url="login_user")
+def studentEdit(request, id):
+    student = Student.objects.get(id = id)
+    user = User.objects.get(id = student.user.id)
+    parent = Parent.objects.get(id = student.parent.id)
+    student_form = forms.AddStudentForm(instance=student)
+    parent_form = forms.AddParentForm(instance=parent)
+    student_user_form = forms.AddStudentUserForm(instance=user)
+    form_html = '<div class="row mb-3"><div class="col-md-4"><label class="form-label" for="admission_no">' + str(student_form.fields['admission_no'].label) + '</label>' + str(student_form['admission_no']) + '</div><div class="col-md-2"><label class="form-label" for="roll_no">' + str(student_form.fields['roll_no'].label) + '</label>' + str(student_form['roll_no']) + '</div><div class="col-md-2"><label class="form-label" for="class_id">' + str(student_form.fields['school_class'].label) + '</label>' + str(student_form['school_class']) + '</div><div class="col-md-2"><label class="form-label" for="section_id">' + str(student_form.fields['section'].label) + '</label>' + str(student_form['section']) + '</div><div class="col-md-2"><label class="form-label" for="academic_year">' + str(student_form.fields['academic_year'].label) + '</label>' + str(student_form['academic_year']) + '</div></div><div class="row mb-3"><div class="col-md-6"><label class="form-label" for="first_name">' + str(student_user_form.fields['first_name'].label) + '</label>' + str(student_user_form['first_name']) + '</div><div class="col-md-6"><label class="form-label" for="last_name">' + str(student_user_form.fields['last_name'].label) + '</label>' + str(student_user_form['last_name']) + '</div></div><div class="row mb-3"><div class="col-md-3"><label class="form-label" for="gender">' + str(student_form.fields['gender'].label) + '</label>' + str(student_form['gender']) + '</div><div class="col-md-3"><label class="form-label" for="dob">' + str(student_form.fields['dob'].label) + '</label>' + str(student_form['dob']) + '</div><div class="col-md-3"><label class="form-label" for="admission_data">' + str(student_form.fields['admission_data'].label) + '</label>' + str(student_form['admission_data']) + '</div><div class="col-md-3"><label class="form-label" for="admission_data">' + str(student_form.fields['category'].label) + '</label>' + str(student_form['category']) + '</div></div><div class="row mb-3"><div class="col-md-6"><label class="form-label" for="father_first_name">' + str(parent_form.fields['father_first_name'].label) + '</label>' + str(parent_form['father_first_name']) + '</div><div class="col-md-6"><label class="form-label" for="mother_first_name">' + str(parent_form.fields['mother_first_name'].label) + '</label>' + str(parent_form['mother_first_name']) + '</div></div><div class="row mb-3"><div class="col-md-6"><label class="form-label" for="father_mobile">' + str(parent_form.fields['father_mobile'].label) + '</label>' + str(parent_form['father_mobile']) + '</div><div class="col-md-6"><label class="form-label" for="mother_mobile">' + str(parent_form.fields['mother_mobile'].label) + '</label>' + str(parent_form['mother_mobile']) + '</div></div><div class="row mb-3"><div class="col-md-6"><label class="form-label" for="father_email">' + str(parent_form.fields['father_email'].label) + '</label>' + str(parent_form['father_email']) + '</div><div class="col-md-6"><label class="form-label" for="mother_email">' + str(parent_form.fields['mother_email'].label) + '</label>' + str(parent_form['mother_email']) + '</div></div><div class="row mb-3"><div class="col-md-12"><label class="form-label" for="address">' + str(student_form.fields['address'].label) + '</label>' + str(student_form['address']) + '</div></div>'
+    return JsonResponse({'student_form' : form_html}, status = 200)
+
+@login_required(login_url="login_user")
+def studentUpdate(request):
+    if request.method == "POST":
+        student = Student.objects.get(id = request.POST.get('id'))
+        Student.objects.filter(id = request.POST.get('id')).update(
+            admission_no = request.POST.get('admission_no'),
+            roll_no = request.POST.get('roll_no'),
+            academic_year = request.POST.get('academic_year'),
+            gender = request.POST.get('gender'),
+            dob = request.POST.get('dob'),
+            admission_data = request.POST.get('admission_data'),
+            mobile = request.POST.get('father_mobile'),
+            school_class = Class.objects.get(id = request.POST.get('school_class')),
+            creator_id = request.user.id,
+            address = request.POST.get('address'),
+            category = Categories.objects.get(id = request.POST.get('category')),
+            section = Section.objects.get(id = request.POST.get('section')),
+        )
+        User.objects.filter(id = student.user.id).update(
+            username = request.POST.get('first_name'),
+            first_name = request.POST.get('first_name'),
+            last_name = request.POST.get('last_name'),
+        )
+
+        Parent.objects.filter(id = student.parent.id).update(
+            mother_first_name = request.POST.get('mother_first_name'),
+            mother_mobile = request.POST.get('mother_mobile'),
+            mother_email = request.POST.get('mother_email'),
+            father_first_name = request.POST.get('father_first_name'),
+            father_email = request.POST.get('father_email'),
+            father_mobile = request.POST.get('father_mobile'),
+        )
+        
+        messages.success(request, 'Student updated successfully')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('studentIndex')
+
+@login_required(login_url="login_user")
+def studentSync(request, id):
+    student = Student.objects.get(id = id)
+    parent = Parent.objects.get(id = student.parent.id)
+    student_user = User.objects.get(id = student.user.id)
+    lms_url = "https://lms.tabschool.in/app/api/add-student"
+    data = {
+        'father_first_name' : parent.father_first_name,
+        'father_mobile': parent.father_mobile,
+        'mother_first_name': parent.mother_first_name,
+        'mother_mobile': parent.mother_mobile,
+        'first_name': student_user.first_name,
+        'last_name': student_user.last_name,
+        'admission_no': student.admission_no,
+        'gender': student.gender,
+        'dob': student.dob,
+        'current_address': student.address,
+        'class_section_id': student.school_class.id ,
+        'category_id': student.category.id,
+        'mother_email': parent.mother_email,
+        'father_email': parent.father_email,
+        }
+    lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
+    lms_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+lms_token.token}
+    lms_response = requests.post(lms_url, data=json.dumps(data, indent=4, sort_keys=True, default=str), headers=lms_headers)
+    print(lms_response)
+    lms_response = json.loads(lms_response.text)
+    if lms_response['status'] == 'success':
+        Student.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)
+
+@login_required(login_url='login_user')
+def departmentIndex(request):
+    departments = Department.objects.filter(creator = request.user.id)
+    department_form = forms.AddDepartmentForm()
+    if request.method == "POST":
+        response_data = {}
+        response_data['department_name'] = request.POST.get('department_name')
+        Department.objects.create(
+            department_name = request.POST.get('department_name'),
+            creator = request.user
+        )
+        messages.success(request, 'Department added successfully.')
+    return render(request, app_name+"\departments\index.html", {"departments" : departments, "department_form" : department_form})
+
+@login_required(login_url="login_user")
+def departmentDelete(request, id):
+    department = Department.objects.get(id = id)
+    department.delete()
+    messages.success(request, "Department deleted Successfully.")
+    return redirect('departmentIndex')
+
+@login_required(login_url='login_user')
+def departmentEdit(request, id):
+    department = Department.objects.get(id = id)
+    department_form = forms.AddDepartmentForm(instance=department)
+    form_html = ''
+    for form_data in department_form:
+        form_html += '<div class="row mb-3"><label class="form-label col-sm-3 col-form-label">' + str(form_data.label) + ':</label><div class="col-sm-9">' + str(form_data) + '</div></div>'
+    return JsonResponse({'department_form' : form_html}, status = 200)
+
+@login_required(login_url="login_user")
+def departmentUpdate(request):
+    if request.method == "POST":
+        Department.objects.filter(id = request.POST.get('id')).update(
+            department_name = request.POST.get('department_name'),
+            is_synced = 0
+        )
+        messages.success(request, 'Department updated successfully.')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('departmentIndex')
+
+@login_required(login_url='login_user')
+def designationIndex(request):
+    designations = Designation.objects.filter(creator = request.user.id)
+    designation_form = forms.AddDesignationForm()
+    if request.method == "POST":
+        response_data = {}
+        response_data['designation_name'] = request.POST.get('designation_name')
+        Designation.objects.create(
+            designation_name = request.POST.get('designation_name'),
+            creator = request.user
+        )
+        messages.success(request, 'Designation added successfully.')
+    return render(request, app_name+"\designations\index.html", {"designations" : designations, "designation_form" : designation_form})
+
+@login_required(login_url="login_user")
+def designationDelete(request, id):
+    designation = Designation.objects.get(id = id)
+    designation.delete()
+    messages.success(request, "Designation deleted Successfully.")
+    return redirect('designationIndex')
+
+@login_required(login_url='login_user')
+def designationEdit(request, id):
+    designation = Designation.objects.get(id = id)
+    designation_form = forms.AddDesignationForm(instance=designation)
+    form_html = ''
+    for form_data in designation_form:
+        form_html += '<div class="row mb-3"><label class="form-label col-sm-3 col-form-label">' + str(form_data.label) + ':</label><div class="col-sm-9">' + str(form_data) + '</div></div>'
+    return JsonResponse({'designation_form' : form_html}, status = 200)
+
+@login_required(login_url='login_user')
+def designationUpdate(request):
+    if request.method == "POST":
+        Designation.objects.filter(id = request.POST.get('id')).update(
+            designation_name = request.POST.get('designation_name'),
+            is_synced = 0
+        )
+        messages.success(request, 'Designation updated successfully.')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('designationIndex')
+
+@login_required(login_url="login_user")
+def departmentSync(request, id):
+    department = Department.objects.get(id = id)
+    ais_url = "https://ais.tabschool.in/api/department-store"
+    ais_data = {
+        'name' : department.department_name,
+        }
+    ais_token = SessionManager.objects.get(user_id = request.user.id, productType = 'ais')
+    ais_headers={'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":ais_token.token}
+    ais_response = requests.post(ais_url, data=json.dumps(ais_data), headers=ais_headers)
+    print(ais_response)
+    ais_response = json.loads(ais_response.text)
+    
+    if ais_response['status'] == 'success':
+        Department.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)
+
+@login_required(login_url='login_user')
+def roleIndex(request):
+    roles = Role.objects.filter(creator = request.user.id)
+    role_form = forms.AddRoleForm()
+    if request.method == "POST":
+        response_data = {}
+        response_data['role_name'] = request.POST.get('role_name')
+        Role.objects.create(
+            role_name = request.POST.get('role_name'),
+            creator = request.user
+        )
+        messages.success(request, 'Role added successfully.')
+    return render(request, app_name+"\/roles\index.html", {"roles" : roles, "role_form" : role_form})
+
+@login_required(login_url="login_user")
+def roleDelete(request, id):
+    role = Role.objects.get(id = id)
+    role.delete()
+    messages.success(request, "Role deleted Successfully.")
+    return redirect('roleIndex')
+
+@login_required(login_url='login_user')
+def roleEdit(request, id):
+    role = Role.objects.get(id = id)
+    role_form = forms.AddRoleForm(instance=role)
+    form_html = ''
+    for form_data in role_form:
+        form_html += '<div class="row mb-3"><label class="form-label col-sm-3 col-form-label">' + str(form_data.label) + ':</label><div class="col-sm-9">' + str(form_data) + '</div></div>'
+    return JsonResponse({'role_form' : form_html}, status = 200)
+
+@login_required(login_url='login_user')
+def roleUpdate(request):
+    if request.method == "POST":
+        Role.objects.filter(id = request.POST.get('id')).update(
+            role_name = request.POST.get('role_name'),
+            is_synced = 0
+        )
+        messages.success(request, 'Role updated successfully.')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('roleIndex')
 
 @login_required(login_url="login_user")
 def teacherIndex(request):
-    return render(request, app_name+"\/teachers\index.html")
-
-@login_required(login_url="login_user")
-def departmentIndex(request):
-    department = Department.objects.filter(created_by = request.user.id)
-    if request.method == "POST":
-        response_data = {}
-        response_data['section_name'] = request.POST.get('section_name')
-        lms_url = "https://lms.tabschool.in/app/api/add-section?name="+request.POST.get('section_name')
-        lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
-        lms_headers={"Authorization":"Bearer "+lms_token.token}
-        lms_response = requests.get(lms_url,headers=lms_headers)
-        lms_response = json.loads(lms_response.text)
-        ais_url = "https://ais.tabschool.in/api/section-store?name="+request.POST.get('section_name')
-        ais_token = SessionManager.objects.get(user_id = request.user.id, productType = 'ais')
-        ais_headers={"Authorization":ais_token.token}
-        ais_response = requests.post(ais_url,headers=ais_headers)
-        ais_response = json.loads(ais_response.text)
-        Section.objects.create(
-            lms_id = lms_response['id'],
-            ais_id = ais_response['data'],
-            section_name = request.POST.get('section_name'),
-            created_by = request.user
+    teacher_form = forms.AddTeacherForm()
+    teacher_user_form = forms.AddTeacherUserForm()
+    teachers = Teacher.objects.filter(creator = request.user.id)
+    if request.method == 'POST':
+        user = User.objects.create(
+            username = request.POST.get('first_name')+request.POST.get('last_name'),
+            first_name = request.POST.get('first_name'),
+            last_name = request.POST.get('last_name'),
+            email = request.POST.get('email'),
+            password = make_password("23wesdxc@#WESDXC%"),
+            is_staff = 1,
+            is_active = 1,
+            is_superuser = 0,
         )
-        messages.success(request, 'Section added successfully')
-    return render(request, app_name+"\section\index.html", {"sections" : sections, "section_form" : section_form})
 
+        Teacher.objects.create(
+            staff_no = request.POST.get('staff_no'),
+            mobile = request.POST.get('mobile'),
+            role = Role.objects.get(id = request.POST.get('role')),
+            department = Department.objects.get(id = request.POST.get('department')),
+            designation = Designation.objects.get(id = request.POST.get('designation')),
+            dob = request.POST.get('dob'),
+            qualification = request.POST.get('qualification'),
+            address = request.POST.get('address'),
+            user_id = user.id,
+            creator = request.user
+        )
+        messages.success(request, 'Teacher added successfully.')
+    return render(request, app_name+"\/teachers\index.html", {'teacher_form' : teacher_form, 'teacher_user_form' : teacher_user_form, 'teachers' : teachers})
 
 @login_required(login_url="login_user")
-def designationIndex(request):
-    pass
+def teacherDelete(request, id):
+    teacher = Teacher.objects.get(id = id)
+    User.objects.filter(id = teacher.user.id).delete()
+    teacher.delete()
+    messages.success(request, "Teacher deleted Successfully.")
+    return redirect('teacherIndex')
+
+@login_required(login_url='login_user')
+def teacherEdit(request, id):
+    teacher = Teacher.objects.get(id = id)
+    user = User.objects.get(id = teacher.user.id)
+    teacher_form = forms.AddTeacherForm(instance=teacher)
+    teacher_user_form = forms.AddTeacherUserForm(instance=user)
+    form_html = '<div class="row mb-3"><div class="col-md-3"><label class="form-label" for="staff_no">' + str(teacher_form.fields['staff_no'].label) + '</label>' + str(teacher_form['staff_no']) + '</div><div class="col-md-3"><label class="form-label" for="role">' + str(teacher_form.fields['role'].label) + '</label>' + str(teacher_form['role']) + '</div><div class="col-md-3"><label class="form-label" for="department">' + str(teacher_form.fields['department'].label) + '</label>' + str(teacher_form['department']) + '</div><div class="col-md-3"><label class="form-label" for="designation">' + str(teacher_form.fields['designation'].label) + '</label>' + str(teacher_form['designation']) + '</div></div><div class="row mb-3"><div class="col-md-6"><label class="form-label" for="first_name">' + str(teacher_user_form.fields['first_name'].label) + '</label>' + str(teacher_user_form['first_name']) + '</div><div class="col-md-6"><label class="form-label" for="last_name">' + str(teacher_user_form.fields['last_name'].label) + '</label>' + str(teacher_user_form['last_name']) + '</div></div><div class="row mb-3"><div class="col-md-4"><label class="form-label" for="gender">' + str(teacher_form.fields['gender'].label) + '</label>' + str(teacher_form['gender']) + '</div><div class="col-md-4"><label class="form-label" for="dob">' + str(teacher_form.fields['dob'].label) + '</label>' + str(teacher_form['dob']) + '</div><div class="col-md-4"><label class="form-label" for="qualification">' + str(teacher_form.fields['qualification'].label) + '</label>' + str(teacher_form['qualification']) + '</div></div><div class="row mb-3"><div class="col-md-6"><label class="form-label" for="mobile">' + str(teacher_form.fields['mobile'].label) + '</label>' + str(teacher_form['mobile']) + '</div><div class="col-md-6"><label class="form-label" for="email">' + str(teacher_user_form.fields['email'].label) + '</label>' + str(teacher_user_form['email']) + '</div></div><div class="row mb-3"><div class="col-md-12"><label class="form-label" for="address">' + str(teacher_form.fields['address'].label) + '</label>' + str(teacher_form['address']) + '</div></div>'
+    return JsonResponse({'teacher_form' : form_html}, status = 200)
+
+@login_required(login_url="login_user")
+def teacherUpdate(request):
+    if request.method == "POST":
+        teacher = Teacher.objects.get(id = request.POST.get('id'))
+        Teacher.objects.filter(id = request.POST.get('id')).update(
+            staff_no = request.POST.get('staff_no'),
+            mobile = request.POST.get('mobile'),
+            role = Role.objects.get(id = request.POST.get('role')),
+            department = Department.objects.get(id = request.POST.get('department')),
+            designation = Designation.objects.get(id = request.POST.get('designation')),
+            dob = request.POST.get('dob'),
+            qualification = request.POST.get('qualification'),
+            address = request.POST.get('address')
+        )
+
+        User.objects.filter(id = teacher.user.id).update(
+            username = request.POST.get('first_name')+request.POST.get('last_name'),
+            first_name = request.POST.get('first_name'),
+            last_name = request.POST.get('last_name'),
+            email = request.POST.get('email')
+        )
+        messages.success(request, 'Teacher updated successfully.')
+    else:
+        messages.error(request, 'Oops, Something went worng')
+    return redirect('teacherIndex')
+
+@login_required(login_url="login_user")
+def teacherSync(request, id):
+    teacher = Teacher.objects.get(id = id)
+    teacher_user = User.objects.get(id = teacher.user.id)
+    lms_url = "https://lms.tabschool.in/app/api/add-teacher"
+    data = {
+        'first_name': teacher_user.first_name,
+        'last_name': teacher_user.last_name,
+        'gender': teacher.gender,
+        'dob': teacher.dob,
+        'email': teacher_user.email,
+        'mobile': teacher.mobile,
+        'address': teacher.qualification ,
+        'qualification': teacher.qualification,
+        }
+    lms_token = SessionManager.objects.get(user_id = request.user.id, productType = 'lms')
+    lms_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+lms_token.token}
+    lms_response = requests.post(lms_url, data=json.dumps(data, indent=4, sort_keys=True, default=str), headers=lms_headers)
+    lms_response = json.loads(lms_response.text)
+    if lms_response['status'] == 'success':
+        Teacher.objects.filter(id = id).update(is_synced = 1)
+        return JsonResponse({'status' : 'success'}, status = 200)
+    else:
+        return JsonResponse({'status' : 'error'}, status = 200)

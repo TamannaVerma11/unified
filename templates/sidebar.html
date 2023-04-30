@@ -59,9 +59,9 @@
                </a>
                <ul>
                   <li><a href="{% url 'teacherIndex' %}">Teachers List</a></li>
-                  <li><a href="{% url 'teacherIndex' %}">Departments</a></li>
-                  <li><a href="{% url 'teacherIndex' %}">Roles</a></li>
-                  <li><a href="{% url 'teacherIndex' %}">Designation</a></li>
+                  <li><a href="{% url 'departmentIndex' %}">Departments</a></li>
+                  <li><a href="{% url 'roleIndex' %}">Roles</a></li>
+                  <li><a href="{% url 'designationIndex' %}">Designation</a></li>
                </ul>
             </li>
             <li>
@@ -85,7 +85,7 @@
                </a>
             </li>
             <li>
-               <a href="" aria-expanded="false">
+               <a href="https://tracking.tabschool.in/tracking-user-login?email={{user.email}}" aria-expanded="false" target="_blank">
                   <div class="nav_icon_small">
                      <img src="{% static 'img/menu-icon/3.svg' %}" alt="">
                   </div>

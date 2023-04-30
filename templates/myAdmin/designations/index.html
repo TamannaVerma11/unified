@@ -14,10 +14,10 @@
                         {% endif %}
                         <div class="QA_section">
                             <div class="white_box_tittle list_header">
-                                <h4>Medium List</h4>
+                                <h4>Designation List</h4>
                                 <div class="box_right d-flex lms_block">
                                     <div class="add_button ms-2">
-                                        <a data-bs-toggle="modal" data-bs-target="#add-medium" class="btn_1">Add Medium +</a>
+                                        <a data-bs-toggle="modal" data-bs-target="#add-designation" class="btn_1">Add Designation +</a>
                                     </div>
                                 </div>
                             </div>
@@ -27,18 +27,18 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">S. No.</th>
-                                            <th scope="col">Medium</th>
+                                            <th scope="col">designation</th>
                                             <th scope="col">Sync</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for medium in mediums %}
+                                        {% for designation in designations %}
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
-                                                <td>{{ medium.medium_name }}</td>
-                                                <td><span class="badge rounded-pill {% if medium.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %} sync-data" data-url="{% url 'mediumSync' id=medium.id %}" data-id={{ medium.id }}>{% if medium.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
-                                                <td><i class="fas fa-edit editmedium" data-bs-toggle="modal" data-bs-target="#edit-medium" data-url="{% url 'mediumEdit' id=medium.id %}" data-id={{ medium.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.id %}" data-type="medium"></i>  </td>
+                                                <td>{{ designation.designation_name }}</td>
+                                                <td><span class="badge rounded-pill {% if designation.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %}">{% if designation.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit editdesignation" data-bs-toggle="modal" data-bs-target="#edit-designation" data-url="{% url 'designationEdit' id=designation.id %}" data-id={{ designation.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{designation.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'designationDelete' id=designation.id %}" data-type="designation"></i>  </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -69,35 +69,35 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="edit-medium" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="edit-designation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Medium</h5>
+                <h5 class="modal-title">Edit Designation</h5>
             </div>
-            <form id="edit_form" method="post" action="{% url 'mediumUpdate' %}">
+            <form id="edit_form" method="post" action="{% url 'designationUpdate' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'mediumIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <a href="{% url 'designationIndex' %}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary del-button">Update</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<div class="modal fade" id="add-medium" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="add-designation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Medium</h5>
+                <h5 class="modal-title">Add Designation</h5>
             </div>
-            <form id="add_form" method="post" action="{% url 'mediumIndex' %}">
+            <form id="add_form" method="post" action="{% url 'designationIndex' %}">
                 {% csrf_token %}
                 <div class="modal-body">
-                    {% for form in medium_form %}
+                    {% for form in designation_form %}
                         <div class="row mb-3">
                             <label class="form-label col-sm-3 col-form-label">{{form.label}}:</label>
                             <div class="col-sm-9">
@@ -107,7 +107,7 @@
                     {% endfor %}
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'mediumIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <a href="{% url 'designationIndex' %}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary del-button">Add</button>
                 </div>
             </form>
@@ -117,34 +117,19 @@
 {% endblock  %}
 {% block js %}
 <script>
-    $(".editmedium").click(function(){
+    $(".editdesignation").click(function(){
         var id = $(this).attr("data-id");
         $.ajax({
             type: 'GET',
             url: $(this).attr("data-url"),
             success: function(response) {
-                $("#edit-medium").find('.modal-body').html(response.medium_form);
-                $("#edit-medium").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+                $("#edit-designation").find('.modal-body').html(response.designation_form);
+                $("#edit-designation").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
             },
             error: function(response) {
-                $('#edit-medium').find('.modal-body').html('Oops something went wrong!');
+                $('#edit-designation').find('.modal-body').html('Oops something went wrong!');
             }
         })
-    });
-
-    $(".sync-data").click(function(){
-        var id = $(this).attr("data-id");
-        $.ajax({
-            type: 'GET',
-            url: $(this).attr("data-url"),
-            success: function(response) {
-                $(".sync-data").removeClass("bg-danger")
-                $(".sync-data").addClass("bg-success")
-                $(".sync-data").html("Synced")
-            },
-            error: function(response) {
-            }
-        })
-    });
+    })
 </script>
 {% endblock  %}
