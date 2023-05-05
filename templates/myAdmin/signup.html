@@ -1,0 +1,60 @@
+{% extends 'myAdmin/auth_base.html' %}
+{% load static %}
+{% block content %}
+<div class="sign-up-form forgot-form1">
+    <h1 >Sign Up</h1>
+    <p>Let's Create your Account</p>
+    <form method="POST" class="m-login__form m-form" action="{% url 'signup_user' %}" id="register-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <input type="text" class="form-control" type="text" name="first_name" placeholder="First Name*" value="" required>
+                
+            </div>
+            <div class="col-lg-6">
+                <input type="text" class="form-control" type="text" name="last_name" placeholder="Last Name*"  value="" required>
+                
+            </div>
+            <div class="col-lg12">
+                <input type="email" class="form-control" type="text" name="email" placeholder="E-Mail*" value="" required>
+                
+            </div>
+            {% comment %} <div class="col-lg-3">
+                <select class="custom_select form-control">
+                    <option disabled selected value="default">+91</option>
+                    <option value="US">US</option>
+                    <option value="UK">UK</option>
+                    <option value="IN">IN</option>
+                </select>
+            </div> {% endcomment %}
+            <div class="col-lg-12">
+                <div class="otp-input1">
+                    <input type="text" class="form-control" id="mobile_no" name="mobile_no" placeholder="Phone Number*" value="" required>
+                </div>
+            </div>
+            <div class="col-lg12">
+                <input type="password" class="form-control" type="text" name="password" placeholder="Password*" value="" required>
+                
+            </div>
+            {% comment %} <div class="col-lg-4">
+                <div class="otp-button1">
+                    <button type="button" id="send-otp">SEND OTP</button>
+                </div>
+            </div> {% endcomment %}
+            {% comment %} <div class="col-lg-6">
+                <input type="text" class="form-control" id="otp" name="otp" placeholder="OTP" disabled>
+            </div>
+            <div class="col-lg-6">
+                <div class="receive">
+                    <p>Didn't receive the code?</p>
+                    <a href="#">Send code again</a>
+                </div>
+            </div> {% endcomment %}
+        </div>
+        <button type="submit" id="submit-form">Sign</button>
+    </form>
+    <div class="login-sign-up">
+        <p>Already have an Account? <a href="{% url 'login_user' %}">Log In</a></p>
+    </div>
+</div>
+{% endblock  %}

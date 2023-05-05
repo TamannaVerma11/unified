@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="main_content_iner ">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="white_card card_height_100 mb_30">
+                    <div class="white_card_body">
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div  {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show alert" {% endif %}> {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="QA_section">
+                            <div class="white_box_tittle list_header">
+                                <h4>Medium List</h4>
+                                <div class="box_right d-flex lms_block">
+                                    <div class="add_button ms-2">
+                                        <a data-bs-toggle="modal" data-bs-target="#add-medium" class="btn_1">Add Medium +</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="QA_table mb_30">
+
+                                <table class="table lms_table_active ">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">S. No.</th>
+                                            <th scope="col">Medium</th>
+                                            <th scope="col">Sync</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for medium in mediums %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ medium.medium_name }}</td>
+                                                <td><span class="badge rounded-pill {% if medium.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %} sync-data" data-url="{% url 'mediumSync' id=medium.id %}" data-id={{ medium.id }}>{% if medium.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit editmedium" data-bs-toggle="modal" data-bs-target="#edit-medium" data-url="{% url 'mediumEdit' id=medium.id %}" data-id={{ medium.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{medium.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'mediumDelete' id=medium.id %}" data-type="medium"></i>  </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you Sure?</h5>
+            </div>
+            <form id="del_form">
+                {% csrf_token %}
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a class="btn btn-primary del-button">Proceed</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-medium" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Medium</h5>
+            </div>
+            <form id="edit_form" method="post" action="{% url 'mediumUpdate' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'mediumIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add-medium" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Medium</h5>
+            </div>
+            <form id="add_form" method="post" action="{% url 'mediumIndex' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% for form in medium_form %}
+                        <div class="row mb-3">
+                            <label class="form-label col-sm-3 col-form-label">{{form.label}}:</label>
+                            <div class="col-sm-9">
+                                {{form}}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'mediumIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block js %}
+<script>
+    $(".editmedium").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-medium").find('.modal-body').html(response.medium_form);
+                $("#edit-medium").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-medium').find('.modal-body').html('Oops something went wrong!');
+            }
+        })
+    });
+
+    $(".sync-data").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $(".sync-data").removeClass("bg-danger")
+                $(".sync-data").addClass("bg-success")
+                $(".sync-data").html("Synced")
+            },
+            error: function(response) {
+            }
+        })
+    });
+</script>
+{% endblock  %}

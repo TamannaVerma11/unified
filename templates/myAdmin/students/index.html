@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="main_content_iner ">
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="white_card card_height_100 mb_30">
+                    <div class="white_card_body">
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div  {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show alert" {% endif %}> {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="QA_section">
+                            <div class="white_box_tittle list_header">
+                                <h4>Student List</h4>
+                                <div class="box_right d-flex lms_block">
+                                    <div class="add_button ms-2">
+                                        <a href="" data-bs-toggle="modal" data-bs-target="#add_student" class="btn_1">Add Student</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="QA_table mb_30">
+                                <table class="table lms_table_active ">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Roll No.</th>
+                                            <th scope="col">First Name</th>
+                                            <th scope="col">Last Name</th>
+                                            <th scope="col">Phone</th>
+                                            <th scope="col">Class</th>
+                                            <th scope="col">Section</th>
+                                            <th scope="col">Sync</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for student in students %}
+                                            <tr>
+                                                <td>{{ student.roll_no }}</td>
+                                                <td>{{ student.user.first_name }}</td>
+                                                <td>{{ student.user.last_name }}</td>
+                                                <td>{{ student.mobile }}</td>
+                                                <td>{{ student.school_class.class_name }}</td>
+                                                <td>{{ student.section.section_name }}</td>
+                                                <td><span class="badge rounded-pill {% if student.is_synced == 0 %} bg-danger {% else %} bg-success {% endif %} sync-data" data-url="{% url 'studentSync' id=student.id %}" data-id={{ student.id }}>{% if student.is_synced == 0 %} Sync {% else %} Synced {% endif %}</span></td>
+                                                <td><i class="fas fa-edit editstudent" data-bs-toggle="modal" data-bs-target="#edit-student" data-url="{% url 'studentEdit' id=student.id %}" data-id={{ student.id }}></i>&nbsp;&nbsp;&nbsp;&nbsp;<i data-class-id={{student.id}} class="fa fa-trash" data-bs-toggle="modal" data-bs-target="#confirm" data-url="{% url 'studentDelete' id=student.id %}" data-type="student"></i>  </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add_student" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLongTitle">Add Student</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="add-student" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label" for="admission_no">{{ student_form.admission_no.label }}</label>
+                            {{ student_form.admission_no }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="roll_no">{{ student_form.roll_no.label }}</label>
+                            {{ student_form.roll_no }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="class_id">{{ student_form.school_class.label }}</label>
+                            {{ student_form.school_class }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="section_id">{{ student_form.section.label }}</label>
+                            {{ student_form.section }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="academic_year">{{ student_form.academic_year.label }}</label>
+                            {{ student_form.academic_year }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="first_name">{{ student_user_form.first_name.label }}</label>
+                            {{ student_user_form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="last_name">{{ student_user_form.last_name.label }}</label>
+                            {{ student_user_form.last_name }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label" for="gender">{{ student_form.gender.label }}</label>
+                            {{ student_form.gender }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="dob">{{ student_form.dob.label }}</label>
+                            {{ student_form.dob }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="admission_data">{{ student_form.admission_data.label }}</label>
+                            {{ student_form.admission_data }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="admission_data">{{ student_form.category.label }}</label>
+                            {{ student_form.category }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="father_name">{{ parent_form.father_first_name.label }}</label>
+                            {{ parent_form.father_first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mother_name">{{ parent_form.mother_first_name.label }}</label>
+                            {{ parent_form.mother_first_name }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="father_mobile">{{ parent_form.father_mobile.label }}</label>
+                            {{ parent_form.father_mobile }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mother_mobile">{{ parent_form.mother_mobile.label }}</label>
+                            {{ parent_form.mother_mobile }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="father_email">{{ parent_form.father_email.label }}</label>
+                            {{ parent_form.father_email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="mother_email">{{ parent_form.mother_email.label }}</label>
+                            {{ parent_form.mother_email }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label" for="address">{{ student_form.address.label }}</label>
+                            {{ student_form.address }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you Sure?</h5>
+            </div>
+            <form id="del_form">
+                {% csrf_token %}
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a class="btn btn-primary del-button">Proceed</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-student" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Student</h5>
+            </div>
+            <form id="edit_form" method="post" action="{% url 'studentUpdate' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'studentIndex' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary del-button">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block js %}
+<script>
+    $(".editstudent").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-student").find('.modal-body').html(response.student_form);
+                $("#edit-student").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-student').find('.modal-body').html('Oops something went wrong!');
+            }
+        })
+    });
+
+    $(".sync-data").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $(".sync-data").removeClass("bg-danger")
+                $(".sync-data").addClass("bg-success")
+                $(".sync-data").html("Synced")
+            },
+            error: function(response) {
+            }
+        })
+    });
+</script>
+{% endblock  %}

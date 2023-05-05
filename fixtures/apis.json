@@ -1,0 +1,62 @@
+[
+    {
+      "model": "myAdmin.APIs",
+      "pk": 1,
+      "fields": {
+        "api_name": "login",
+        "protocol": "https",
+        "base_url": "ais.tabschool.in",
+        "api_url": "/api/login",
+        "api_method": "post",
+        "product_type": "ais"
+      }
+    },
+    {
+        "model": "myAdmin.APIs",
+        "pk": 1,
+        "fields": {
+          "api_name": "login",
+          "protocol": "https",
+          "base_url": "ais.tabschool.in",
+          "api_url": "/api/assign-class-teacher/create",
+          "api_method": "post",
+          "product_type": "ais"
+        }
+      },
+      {
+        "model": "myAdmin.APIs",
+        "pk": 1,
+        "fields": {
+          "api_name": "login",
+          "protocol": "https",
+          "base_url": "ais.tabschool.in",
+          "api_url": "/api/section-store",
+          "api_method": "post",
+          "product_type": "ais"
+        }
+      },
+      {
+        "model": "myAdmin.APIs",
+        "pk": 1,
+        "fields": {
+          "api_name": "login",
+          "protocol": "https",
+          "base_url": "ais.tabschool.in",
+          "api_url": "/api/class-store",
+          "api_method": "post",
+          "product_type": "ais"
+        }
+      },
+      {
+        "model": "myAdmin.APIs",
+        "pk": 1,
+        "fields": {
+          "api_name": "login",
+          "protocol": "https",
+          "base_url": "ais.tabschool.in",
+          "api_url": "/api/designation/create",
+          "api_method": "post",
+          "product_type": "ais"
+        }
+      },
+  ]

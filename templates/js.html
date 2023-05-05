@@ -40,3 +40,96 @@
 <script src="{% static 'vendors/chart_am/chart-custom.js' %}"></script>
 <script src="{% static 'js/dashboard_init.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
+<script>
+    $("#add-section").submit(function () {
+        
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'classIndex' %}",
+            data: {
+                section_name:$('#id_section_name').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post',
+                form_type: 'section'
+            },
+            success: function (response) {
+                $("#add-section").trigger('reset');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    });
+
+    $(".fa-trash").click(function() {
+        $('#confirm').find('.modal-body').html("If you want to delete "+$(this).attr("data-type")+" click on <strong>Proceed</strong> to confirm and <strong>Cancel</strong> to exit.");
+        $('#confirm').find('.del-button').attr("href", $(this).attr("data-url"));
+    })
+
+    $(".editsection").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-section").find('.modal-body').html(response.section_form);
+                $("#edit-section").find('label').attr('style', 'display:none');
+                $("#edit-section").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-section').find('.modal-bodyy').html('Oops somethinng went wrong');
+            }
+        })
+    })
+
+    $(".editmedium").click(function(){
+        var id = $(this).attr("data-id");
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                $("#edit-medium").find('.modal-body').html(response.medium_form);
+                $("#edit-medium").find('label').attr('style', 'display:none');
+                $("#edit-medium").find('.modal-body').append('<input type="hidden" name="id" value="'+ id +'">')
+            },
+            error: function(response) {
+                $('#edit-medium').find('.modal-bodyy').html('Oops somethinng went wrong');
+            }
+        })
+    })
+
+    $("#add-student").submit(function () {
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'studentIndex' %}",
+            data: {
+                admission_no:$('#admission_no').val(),
+                roll_no:$('#roll_no').val(),
+                class_id:$('#class_id').val(),
+                section_id:$('#section_id').val(),
+                academic_year:$('#academic_year').val(),
+                first_name:$('#first_name').val(),
+                last_name:$('#last_name').val(),
+                gender:$('#gender').val(),
+                dob:$('#dob').val(),
+                admission_data:$('#admission_data').val(),
+                father_name:$('#father_name').val(),
+                mother_name:$('#mother_name').val(),
+                father_mobile:$('#father_mobile').val(),
+                mother_mobile:$('#mother_mobile').val(),
+                address:$('#address').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (response) {
+                $("#add-student").trigger('reset');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    });
+</script>
