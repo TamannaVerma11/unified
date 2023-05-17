@@ -219,20 +219,5 @@
             }
         })
     });
-
-    $(".sync-data").click(function(){
-        var id = $(this).attr("data-id");
-        $.ajax({
-            type: 'GET',
-            url: $(this).attr("data-url"),
-            success: function(response) {
-                $(".sync-data").removeClass("bg-danger")
-                $(".sync-data").addClass("bg-success")
-                $(".sync-data").html("Synced")
-            },
-            error: function(response) {
-            }
-        })
-    });
 </script>
 {% endblock  %}

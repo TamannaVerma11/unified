@@ -46,7 +46,7 @@ def login_user(request):
             return HttpResponseRedirect('/dashboard')
         else:
             message = 'Login Failed'
-    return render(request, app_name+'\login.html', context={'form' : form, 'message' : message})
+    return render(request, app_name+'/login.html', context={'form' : form, 'message' : message})
 
 def logout_user(request):
     SessionManager.objects.filter(user = request.user.id).delete()
@@ -79,8 +79,8 @@ def signup_user(request):
             mobile = mobile,
             user  = user
         )
-        return render(request, app_name+"\school.html", {"user" : user})
-    return render(request, app_name+"\signup.html")
+        return render(request, app_name+"/school.html", {"user" : user})
+    return render(request, app_name+"/signup.html")
 
 def add_school(request):
     School.objects.create(
@@ -94,7 +94,7 @@ def add_school(request):
 
     user =  User.objects.get(id = request.POST.get('user_id'))
 
-    return render(request, app_name+"\/address.html", {"user" : user})
+    return render(request, app_name+"/address.html", {"user" : user})
 
 def add_address(request):
     address = request.POST.get('address')
@@ -146,7 +146,7 @@ def dashboard(request):
     student_count = Student.objects.filter(creator = request.user.id).count()
     teacher = Teacher.objects.filter(creator = request.user.id)
     teacher_count = Teacher.objects.filter(creator = request.user.id).count()
-    return render(request, app_name+"\index.html", {'school_class' : school_class, 'student' : student, 'teacher' : teacher, 'school_class_count' : school_class_count, 'student_count' : student_count, 'teacher_count' : teacher_count})
+    return render(request, app_name+"/index.html", {'school_class' : school_class, 'student' : student, 'teacher' : teacher, 'school_class_count' : school_class_count, 'student_count' : student_count, 'teacher_count' : teacher_count})
 
 @login_required(login_url='login_user')
 def classIndex(request):
@@ -179,7 +179,7 @@ def classIndex(request):
             )
         messages.success(request, 'Class added successfully')
 
-    return render(request, app_name+"\classes\index.html", context={'class_form' : class_form, 'sections' : sections, 'classes' : classes, 'class_section' : class_section, 'mediums' : mediums})
+    return render(request, app_name+"/classes/index.html", context={'class_form' : class_form, 'sections' : sections, 'classes' : classes, 'class_section' : class_section, 'mediums' : mediums})
 
 @login_required(login_url='login_user')
 def classDelete(request, id):
@@ -277,7 +277,7 @@ def mediumIndex(request):
             creator = request.user
         )
         messages.success(request, 'Medium added successfully.')
-    return render(request, app_name+"\medium\index.html", {"mediums" : mediums, "medium_form" : medium_form})
+    return render(request, app_name+"/medium/index.html", {"mediums" : mediums, "medium_form" : medium_form})
 
 @login_required(login_url="login_user")
 def mediumDelete(request, id):
@@ -314,6 +314,7 @@ def mediumSync(request, id):
     token = SessionManager.objects.get(user_id = request.user.id, productType='lms')
     headers={"Authorization":"Bearer "+token.token}
     response = requests.get(url,headers=headers)
+    print(response)
     response = json.loads(response.text)
     if response['status'] == 'success':
         Medium.objects.filter(id = id).update(is_synced = 1)
@@ -333,7 +334,7 @@ def sectionIndex(request):
             creator = request.user
         )
         messages.success(request, 'Section added successfully.')
-    return render(request, app_name+"\section\index.html", {"sections" : sections, "section_form" : section_form})
+    return render(request, app_name+"/section/index.html", {"sections" : sections, "section_form" : section_form})
 
 @login_required(login_url="login_user")
 def sectionDelete(request, id):
@@ -394,7 +395,7 @@ def categoryIndex(request):
             creator = request.user
         )
         messages.success(request, 'Category added successfully.')
-    return render(request, app_name+"\category\index.html", {"categories" : categories, "category_form" : category_form})
+    return render(request, app_name+"/category/index.html", {"categories" : categories, "category_form" : category_form})
 
 @login_required(login_url="login_user")
 def categoryDelete(request, id):
@@ -484,7 +485,7 @@ def studentIndex(request):
             section = Section.objects.get(id = request.POST.get('section')),
         )
         messages.success(request, 'Student added successfully.')
-    return render(request, app_name+"\students\index.html", context={'class_data' : class_data, 'sections' : sections, 'students' : students, 'categories' : categories, 'student_form' : student_form, 'parent_form' : parent_form, 'student_user_form' : student_user_form})
+    return render(request, app_name+"/students/index.html", context={'class_data' : class_data, 'sections' : sections, 'students' : students, 'categories' : categories, 'student_form' : student_form, 'parent_form' : parent_form, 'student_user_form' : student_user_form})
 
 @login_required(login_url='login_user')
 def studentDelete(request, id):
@@ -589,7 +590,7 @@ def departmentIndex(request):
             creator = request.user
         )
         messages.success(request, 'Department added successfully.')
-    return render(request, app_name+"\departments\index.html", {"departments" : departments, "department_form" : department_form})
+    return render(request, app_name+"/departments/index.html", {"departments" : departments, "department_form" : department_form})
 
 @login_required(login_url="login_user")
 def departmentDelete(request, id):
@@ -631,7 +632,7 @@ def designationIndex(request):
             creator = request.user
         )
         messages.success(request, 'Designation added successfully.')
-    return render(request, app_name+"\designations\index.html", {"designations" : designations, "designation_form" : designation_form})
+    return render(request, app_name+"/designations/index.html", {"designations" : designations, "designation_form" : designation_form})
 
 @login_required(login_url="login_user")
 def designationDelete(request, id):
@@ -674,7 +675,7 @@ def departmentSync(request, id):
     print(ais_response)
     ais_response = json.loads(ais_response.text)
     
-    if ais_response['status'] == 'success':
+    if ais_response == 200:
         Department.objects.filter(id = id).update(is_synced = 1)
         return JsonResponse({'status' : 'success'}, status = 200)
     else:
@@ -692,7 +693,7 @@ def roleIndex(request):
             creator = request.user
         )
         messages.success(request, 'Role added successfully.')
-    return render(request, app_name+"\/roles\index.html", {"roles" : roles, "role_form" : role_form})
+    return render(request, app_name+"/roles/index.html", {"roles" : roles, "role_form" : role_form})
 
 @login_required(login_url="login_user")
 def roleDelete(request, id):
@@ -752,7 +753,7 @@ def teacherIndex(request):
             creator = request.user
         )
         messages.success(request, 'Teacher added successfully.')
-    return render(request, app_name+"\/teachers\index.html", {'teacher_form' : teacher_form, 'teacher_user_form' : teacher_user_form, 'teachers' : teachers})
+    return render(request, app_name+"/teachers/index.html", {'teacher_form' : teacher_form, 'teacher_user_form' : teacher_user_form, 'teachers' : teachers})
 
 @login_required(login_url="login_user")
 def teacherDelete(request, id):

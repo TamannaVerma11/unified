@@ -135,12 +135,17 @@
                                  <h3>Classes</h3>
                                  <ul>
                                     <li>Class</li>
+                                    <li class="new-class-li">Medium</li>
                                     <li class="new-class-li">Section</li>
                                  </ul>
+                                 {% if school_class_count > 0 %}
+                                 
+                                 {% else %}
                                  <div class="add-class" align="center">
                                     <p>Sorry no classes currently exist<br> Start adding classes</p>
                                     <button>Add Class</button>
                                  </div>
+                                 {% endif %}
                               </div>
                            </div>
                            <div class="col-lg-6">
