@@ -12,9 +12,9 @@ class BaseForm(forms.ModelForm):
 class LoginForm(BaseForm):
     class Meta:
         model = Login
-        fields = ['username', 'password']
+        fields = ['email', 'password']
         widgets = {
-            'username' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Number'}),
+            'email' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Email'}),
             'password' : forms.PasswordInput(attrs={'class' : 'form-control', 'placeholder' : 'Enter Password'})
         }
 
