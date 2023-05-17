@@ -17,10 +17,11 @@ def login_user(request):
     message = ''
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
-        user = authenticate(
+        authenticate(
             email = request.POST['email'],
             password = request.POST['password']
         )
+        user = User.objects.get(email = request.POST['email'])
         lms_url = "https://lms.tabschool.in/app/api/login?email="+user.email+"&password="+request.POST['password']
         lms_headers={}
         lms_response = requests.get(lms_url,headers=lms_headers)
