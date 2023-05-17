@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-k(an5fl+^@)l4qzg53$vu9l7%4$o2wshela2@9pz413fm1j=kq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myAdmin',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,10 @@ DATABASES = {
         'HOST': 'localhost',
     }
 }
+
+FIXTURE_DIRS = [
+    'fixtures',
+]
 
 
 # Password validation

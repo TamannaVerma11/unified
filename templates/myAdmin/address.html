@@ -1,0 +1,33 @@
+{% extends 'myAdmin/auth_base.html' %}
+{% load static %}
+{% block content %}
+<div class="sign-up-form forgot-form1">
+    <h1 >Address</h1>
+    <p>Add the Address where a Learners shoul arrive</p>
+    <form method="POST" class="m-login__form m-form" action="{% url 'add_address' %}" id="register-form">
+        {% csrf_token %}
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="text" class="form-control" type="text" name="addrress" placeholder="Enter Address" value="" required>
+                
+            </div>
+            <div class="col-lg-12">
+                <input type="text" class="form-control" type="text" name="city" placeholder="Enter City" value="" required>
+                
+            </div>
+            <div class="col-lg-12">
+                <input type="text" class="form-control" type="text" name="state" placeholder="Enter State" value="" required>
+                
+            </div>
+            <div class="col-lg-12">
+                <input type="text" class="form-control" type="text" name="pincode" placeholder="Enter Pincode" value="" required>
+                
+            </div>
+        <button type="submit" id="submit-form">Submit</button>
+    </form>
+    <div class="login-sign-up">
+        <p>Already have an Account? <a href="{% url 'login_user' %}">Log In</a></p>
+    </div>
+</div>
+{% endblock  %}

@@ -1,0 +1,42 @@
+{% extends 'myAdmin/auth_base.html' %}
+{% load static %}
+{% block content %}
+<div class="sign-up-form forgot-form1">
+    <h1 >Institue/School Details</h1>
+    <p>Please fill the given information</p>
+    <form method="POST" class="m-login__form m-form" action="{% url 'add_school' %}" id="register-form">
+        {% csrf_token %}
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="text" class="form-control" type="text" name="school" placeholder="Institue/School Name" value="" required>
+                
+            </div>
+            <div class="col-lg-12">
+                <select class="form-control" name="role">
+                    <option value=""> Select Role </option>
+                    <option value="school">School</option>
+                </select>
+            </div>
+            <div class="col-lg-12">
+                <select class="form-control" name="learners">
+                    <option value=""> Number od Learners </option>
+                    <option value="50">0-50</option>
+                    <option value="100">51-100</option>
+                </select>
+            </div>
+            <div class="col-lg-12">
+                <input type="text" class="form-control" type="text" name="mobile" placeholder="Institue/School Phone Number" value="" required>
+                
+            </div>
+            <div class="col-lg-12">
+                <input type="email" class="form-control" type="text" name="email" placeholder="Institue/School Email" value="" required>
+                
+            </div>
+        <button type="submit" id="submit-form">Submit</button>
+    </form>
+    <div class="login-sign-up">
+        <p>Already have an Account? <a href="{% url 'login_user' %}">Log In</a></p>
+    </div>
+</div>
+{% endblock  %}

@@ -4,7 +4,7 @@
 <div class="sign-up-form forgot-form1">
     <h1 >Sign Up</h1>
     <p>Let's Create your Account</p>
-    <form method="POST" class="m-login__form m-form" action="" id="register-form">
+    <form method="POST" class="m-login__form m-form" action="{% url 'signup_user' %}" id="register-form">
         {% csrf_token %}
         <div class="row">
             <div class="col-lg-6">
@@ -16,11 +16,7 @@
                 
             </div>
             <div class="col-lg12">
-                <input type="text" class="form-control" type="text" name="email" placeholder="E-Mail*" value="" required>
-                
-            </div>
-            <div class="col-lg12">
-                <input type="text" class="form-control" type="text" name="password" placeholder="Password*" value="" required>
+                <input type="email" class="form-control" type="text" name="email" placeholder="E-Mail*" value="" required>
                 
             </div>
             {% comment %} <div class="col-lg-3">
@@ -35,6 +31,10 @@
                 <div class="otp-input1">
                     <input type="text" class="form-control" id="mobile_no" name="mobile_no" placeholder="Phone Number*" value="" required>
                 </div>
+            </div>
+            <div class="col-lg12">
+                <input type="password" class="form-control" type="text" name="password" placeholder="Password*" value="" required>
+                
             </div>
             {% comment %} <div class="col-lg-4">
                 <div class="otp-button1">
@@ -51,10 +51,10 @@
                 </div>
             </div> {% endcomment %}
         </div>
-        <button type="button" id="submit-form" disabled>Submit</button>
+        <button type="submit" id="submit-form">Sign</button>
     </form>
     <div class="login-sign-up">
-        <p>Already have an Account? <a href="{% url 'login' %}">Log In</a></p>
+        <p>Already have an Account? <a href="{% url 'login_user' %}">Log In</a></p>
     </div>
 </div>
 {% endblock  %}

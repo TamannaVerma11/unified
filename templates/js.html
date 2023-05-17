@@ -40,3 +40,25 @@
 <script src="{% static 'vendors/chart_am/chart-custom.js' %}"></script>
 <script src="{% static 'js/dashboard_init.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
+<script>
+    $(".fa-trash").click(function() {
+        $('#confirm').find('.modal-body').html("If you want to delete "+$(this).attr("data-type")+" click on <strong>Proceed</strong> to confirm and <strong>Cancel</strong> to exit.");
+        $('#confirm').find('.del-button').attr("href", $(this).attr("data-url"));
+    });
+    
+    $(".sync-data").click(function(){
+        var id = $(this).attr("data-id");
+        var that = this;
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("data-url"),
+            success: function(response) {
+                 $(that).removeClass("bg-danger")
+                 $(that).addClass("bg-success")
+                 $(that).html("Synced")
+            },
+            error: function(response) {
+            }
+        })
+    });
+</script>
