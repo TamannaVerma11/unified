@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import otp
 
 urlpatterns = [
     path('login', views.login_user, name='login_user'),
@@ -51,4 +52,5 @@ urlpatterns = [
     path('role/delete/<int:id>', views.roleDelete, name="roleDelete"),
     path('role/edit/<int:id>', views.roleEdit, name="roleEdit"),
     path('role/update', views.roleUpdate, name="roleUpdate"),
+    path('send-otp', otp.send_otp, name="send_otp")
 ]

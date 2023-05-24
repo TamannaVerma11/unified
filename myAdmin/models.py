@@ -5,6 +5,14 @@ from django.contrib.auth.models import User
 class Login(User):
     pass
 
+class OTPDevice(models.Model):
+    otp = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=200)
+    is_verified = models.BooleanField()
+
+    class Meta:
+        db_table = 'otp_device'
+
 class Profile(models.Model):
     plain_pass = models.CharField(max_length=200)
     mobile = models.CharField(max_length=200)

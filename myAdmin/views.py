@@ -59,7 +59,7 @@ def signup_user(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        password = '23wesdxc@#WESDXC%'
         mobile = request.POST.get('mobile_no')
         # url = "https://lms.tabschool.in/app/api/user-create?first_name="+first_name+"&last_name="+last_name+"&email="+email+"&password="+password+"&mobile="+mobile
         # headers={}

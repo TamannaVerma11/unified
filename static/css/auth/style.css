@@ -135,16 +135,13 @@ font-size: 20px;}
 .receive a {
     color: #F65459;
     float: right;
-    margin-top: -17px;
     font-size: 15px;
     text-decoration: auto;
 }
 .otp-button1 button {
-    width: 126%;
+    width: 100%;
     font-size: 15px;
-    margin-left: -24px;
     border-radius: 0px 10px 10px 0px;
-    margin-top: 12px;
     height: 40px;
     font-weight: 500;
     box-shadow: none;
