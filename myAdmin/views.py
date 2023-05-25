@@ -449,6 +449,7 @@ def studentIndex(request):
     categories = Categories.objects.filter(creator = request.user.id)
     student_form = forms.AddStudentForm()
     parent_form = forms.AddParentForm()
+    bulk_student_form = forms.BulkStudentUploadFormm()
     student_user_form = forms.AddStudentUserForm()
     if request.method == 'POST':
         user = User.objects.create(
@@ -486,7 +487,7 @@ def studentIndex(request):
             section = Section.objects.get(id = request.POST.get('section')),
         )
         messages.success(request, 'Student added successfully.')
-    return render(request, app_name+"/students/index.html", context={'class_data' : class_data, 'sections' : sections, 'students' : students, 'categories' : categories, 'student_form' : student_form, 'parent_form' : parent_form, 'student_user_form' : student_user_form})
+    return render(request, app_name+"/students/index.html", context={'class_data' : class_data, 'sections' : sections, 'students' : students, 'categories' : categories, 'student_form' : student_form, 'parent_form' : parent_form, 'student_user_form' : student_user_form, 'bulk_student_form' : bulk_student_form})
 
 @login_required(login_url='login_user')
 def studentDelete(request, id):
@@ -578,6 +579,16 @@ def studentSync(request, id):
         return JsonResponse({'status' : 'success'}, status = 200)
     else:
         return JsonResponse({'status' : 'error'}, status = 200)
+
+@login_required(login_url="login_user")
+def studentBulkUpload(request):
+    excel_file = request.FILES['testing_file'].read()
+    academic_year = request.POST['academic_year']
+    school_class = request.POST['school_class']
+    section = request.POST['section']
+    wb = openpyxl.load_workbook(excel_file)
+    worksheet = wb["Sheet1"]
+    print(worksheet)
 
 @login_required(login_url='login_user')
 def departmentIndex(request):

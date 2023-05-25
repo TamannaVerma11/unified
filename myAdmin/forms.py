@@ -6,6 +6,11 @@ GENDER= (
 ('Feamle', 'F'),
 )
 
+ACADEMIC= (
+('2021-2022', '1'),
+('2022-2023', '2'),
+)
+
 class BaseForm(forms.ModelForm):
     pass
 
@@ -141,4 +146,14 @@ class AddTeacherUserForm(BaseForm):
             'first_name' : forms.TextInput(attrs={'class' : 'form-control'}),
             'last_name' : forms.TextInput(attrs={'class' : 'form-control'}),
             'email' : forms.TextInput(attrs={'class' : 'form-control'}),
+        }
+
+class BulkStudentUploadFormm(BaseForm):
+    academic_year = forms.ChoiceField(choices=ACADEMIC, widget=forms.Select(attrs={'class' : 'form-control'}))
+    class Meta:
+        model = Student
+        fields = ['academic_year', 'school_class', 'section']
+        widgets = {
+            'school_class' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
+            'section' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
         }

@@ -34,6 +34,7 @@ urlpatterns = [
     path('student/edit/<int:id>', views.studentEdit, name="studentEdit"),
     path('student/update', views.studentUpdate, name="studentUpdate"),
     path('student/sync/<int:id>', views.studentSync, name="studentSync"),
+    path('student/bulk-upload', views.studentBulkUpload, name="studentBulkUpload"),
     path('teachers', views.teacherIndex, name="teacherIndex"),
     path('teacher/delete/<int:id>', views.teacherDelete, name="teacherDelete"),
     path('teacher/edit/<int:id>', views.teacherEdit, name="teacherEdit"),

@@ -19,6 +19,9 @@
                                     <div class="add_button ms-2">
                                         <a href="" data-bs-toggle="modal" data-bs-target="#add_student" class="btn_1">Add Student</a>
                                     </div>
+                                    <div class="add_button ms-2">
+                                        <a href="" data-bs-toggle="modal" data-bs-target="#import_students" class="btn_1">Import Bulk Students</a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="QA_table mb_30">
@@ -198,6 +201,59 @@
                     <a href="{% url 'studentIndex' %}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary del-button">Update</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="import_students" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document "style="max-width:50%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bulk Import Students</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="mb-2">It’s easy to bulk import students in Tabschool.Follow the instructions below</h5>
+                        <div style="font-weight: 400;font-size: 15px;line-height: 20px;color: #000000;">
+                            Step 1 : Download the Excel Sheet Format<br>
+                            Step 2 : Open <span class="text-success">students.xlsx</span> in MS Excel/Google Sheets<br>
+                            Step 3 : Populate it with data<br>
+                            Step 4: Gender field <span class="text-danger">1 = Male, 2 =  Female, 3 = Others</span><br>
+                            Step 5 : Use Date in <span class="text-danger">DD/MM/YYYY format</span><br>
+                            Step 6 : No need to add country code <span class="text-danger">i.e. +91 for mobile phones</span><br>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="add_button ms-2">
+                            <a href="" class="btn_1" style="background-color: #01B4BC;border: #01B4BC;">Download Format</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <h4 class="modal-title">Bulk Upload Students</h4>
+                    <p>First Select Acadmic Year, Class & Section</p>
+                    <form id="bulh_upload_form" method="post" action="{% url 'studentBulkUpload' %}"  enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            {% for form in bulk_student_form %}
+                            <div class="col-md-4">
+                                <label class="form-label">{{form.label}}:</label>
+                                {{form}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <input type="file" class="form-control" name="testing_file">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary del-button">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             </form>
         </div>
     </div>
