@@ -148,12 +148,23 @@ class AddTeacherUserForm(BaseForm):
             'email' : forms.TextInput(attrs={'class' : 'form-control'}),
         }
 
-class BulkStudentUploadFormm(BaseForm):
+class BulkStudentUploadForm(BaseForm):
     academic_year = forms.ChoiceField(choices=ACADEMIC, widget=forms.Select(attrs={'class' : 'form-control'}))
     class Meta:
         model = Student
-        fields = ['academic_year', 'school_class', 'section']
+        fields = ['academic_year', 'school_class', 'section', 'category']
         widgets = {
             'school_class' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
             'section' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
+            'category' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
+        }
+        
+class BulkTeachersUploadForm(BaseForm):
+    class Meta:
+        model = Student
+        fields = ['role', 'department', 'designation']
+        widgets = {
+            'role' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
+            'department' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
+            'designation' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
         }

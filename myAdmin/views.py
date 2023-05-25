@@ -83,8 +83,14 @@ def signup_user(request):
             mobile = mobile,
             user  = user
         )
-        return render(request, app_name+"/school.html", {"user" : user})
+        return render(request, app_name+"/password.html", {"user" : user})
     return render(request, app_name+"/signup.html")
+
+def add_password(request):
+    User.objects.filter(id = request.POST.get('user_id')).update(
+        password = make_password(request.POST.get('password'))
+    )
+    return render(request, app_name+"/school.html", {"user" : user})
 
 def add_school(request):
     School.objects.create(

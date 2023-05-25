@@ -34,3 +34,4 @@ def send_otp(request):
     response = requests.post(url, data=json.dumps(data), headers=headers)
     print(response)
     return JsonResponse({'otp' : otp}, status = 200)
+
