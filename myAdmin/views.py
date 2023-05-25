@@ -11,6 +11,7 @@ import json
 import pandas as pd
 import os
 from django.core.files.storage import FileSystemStorage
+from myAdmin.otp import verify_otp
 # Create your views here.
 
 app_name = 'myAdmin'
@@ -64,29 +65,34 @@ def signup_user(request):
         email = request.POST.get('email')
         password = '23wesdxc@#WESDXC%'
         mobile = request.POST.get('mobile_no')
-        # url = "https://lms.tabschool.in/app/api/user-create?first_name="+first_name+"&last_name="+last_name+"&email="+email+"&password="+password+"&mobile="+mobile
-        # headers={}
-        # requests.get(url,headers=headers)
-        user = User.objects.create(
-            username = first_name+last_name,
-            first_name = first_name,
-            last_name = last_name,
-            email = email,
-            password = make_password(password),
-            is_superuser = 0,
-            is_staff = 1,
-            is_active = 1
-        )
+        otp = request.POST.get('otp')
+        if verify_otp(mobile, otp):
+            # url = "https://lms.tabschool.in/app/api/user-create?first_name="+first_name+"&last_name="+last_name+"&email="+email+"&password="+password+"&mobile="+mobile
+            # headers={}
+            # requests.get(url,headers=headers)
+            user = User.objects.create(
+                username = first_name+last_name,
+                first_name = first_name,
+                last_name = last_name,
+                email = email,
+                password = make_password(password),
+                is_superuser = 0,
+                is_staff = 1,
+                is_active = 1
+            )
 
-        Profile.objects.create(
-            plain_pass = password,
-            mobile = mobile,
-            user  = user
-        )
-        return render(request, app_name+"/password.html", {"user" : user})
+            Profile.objects.create(
+                plain_pass = password,
+                mobile = mobile,
+                user  = user
+            )
+            return render(request, app_name+"/password.html", {"user" : user})
+        else:
+            messages.error(request, 'Invalid OTP')
     return render(request, app_name+"/signup.html")
 
 def add_password(request):
+    user = User.objects.get(id = request.POST.get('user_id'))
     User.objects.filter(id = request.POST.get('user_id')).update(
         password = make_password(request.POST.get('password'))
     )
@@ -601,6 +607,7 @@ def studentBulkUpload(request):
     uploaded_file_url = fs.url(filename)              
     empexceldata = pd.read_excel(filename)        
     dbframe = empexceldata
+    print(dbframe)
     for dbframe in dbframe.itertuples():
         user = User.objects.create(
             username = dbframe.First_name,
@@ -613,7 +620,7 @@ def studentBulkUpload(request):
         )
 
         parent = Parent.objects.create(
-            mother_first_name = dbframe.Mother_first _name,
+            mother_first_name = dbframe.Mother_first_name,
             mother_mobile = dbframe.Mother_mobile,
             mother_email = dbframe.Mother_email,
             father_first_name = dbframe.Father_first_name,
@@ -631,7 +638,7 @@ def studentBulkUpload(request):
             school_class = Class.objects.get(id = school_class),
             creator_id = request.user.id,
             parent_id = parent.id,
-            address = dbframe.v,
+            address = dbframe.Address,
             user_id = user.id,
             category = Categories.objects.get(id = category),
             section = Section.objects.get(id = section),
@@ -789,7 +796,7 @@ def teacherIndex(request):
     teacher_form = forms.AddTeacherForm()
     teacher_user_form = forms.AddTeacherUserForm()
     teachers = Teacher.objects.filter(creator = request.user.id)
-    bulk_teacher_form = forms.BulkTeachersUploadForm()()
+    bulk_teacher_form = forms.BulkTeachersUploadForm()
     if request.method == 'POST':
         user = User.objects.create(
             username = request.POST.get('first_name')+request.POST.get('last_name'),

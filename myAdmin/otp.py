@@ -11,8 +11,7 @@ def generateOTP() :
         OTP += digits[math.floor(random.random() * 10)]
     return OTP
 
-def send_otp(request):
-    mobile = request.POST['mobile']
+def send_otp(request, mobile=None):
     otp = generateOTP()
     OTPDevice.objects.update_or_create(
         mobile = mobile,
@@ -34,4 +33,11 @@ def send_otp(request):
     response = requests.post(url, data=json.dumps(data), headers=headers)
     print(response)
     return JsonResponse({'otp' : otp}, status = 200)
+
+def verify_otp(mobile, otp):
+    device = OTPDevice.objects.get(mobile  = mobile)
+    if device.otp == otp:
+        return True
+    return False
+
 

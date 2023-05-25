@@ -6,6 +6,8 @@ urlpatterns = [
     path('login', views.login_user, name='login_user'),
     path('logout', views.logout_user, name='logout_user'),
     path('signup', views.signup_user, name='signup_user'),
+    path('send-otp/<mobile>/', otp.send_otp, name="send_otp"),
+    path('send-otp/', otp.send_otp, name="send_otp"),
     path('add-password', views.add_password, name="add_password"),
     path('add-address', views.add_address, name="add_address"),
     path('add-school', views.add_school, name="add_school"),
@@ -55,5 +57,4 @@ urlpatterns = [
     path('role/delete/<int:id>', views.roleDelete, name="roleDelete"),
     path('role/edit/<int:id>', views.roleEdit, name="roleEdit"),
     path('role/update', views.roleUpdate, name="roleUpdate"),
-    path('send-otp', otp.send_otp, name="send_otp")
 ]

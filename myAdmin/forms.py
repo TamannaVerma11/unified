@@ -161,7 +161,7 @@ class BulkStudentUploadForm(BaseForm):
         
 class BulkTeachersUploadForm(BaseForm):
     class Meta:
-        model = Student
+        model = Teacher
         fields = ['role', 'department', 'designation']
         widgets = {
             'role' : forms.Select(attrs={'class' : 'form-control mb-3'}),  
