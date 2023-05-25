@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myAdmin',
     'rest_framework',
+    'import_excel_db',
 ]
 
 MIDDLEWARE = [

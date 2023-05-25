@@ -237,7 +237,7 @@
                         {% csrf_token %}
                         <div class="row mb-3">
                             {% for form in bulk_student_form %}
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">{{form.label}}:</label>
                                 {{form}}
                             </div>
@@ -245,7 +245,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-8">
-                                <input type="file" class="form-control" name="testing_file">
+                                <input type="file" class="form-control" name="student_file">
                             </div>
                             <div class="col-md-4">
                                 <button type="submit" class="btn btn-primary del-button">Submit</button>

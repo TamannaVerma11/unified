@@ -120,6 +120,8 @@ class Student(models.Model):
 
     class Meta:
         db_table = 'student'
+        
+    objects  = models.Manager()
 
 class Department(models.Model):
     department_name = models.CharField(max_length=200)
@@ -170,6 +172,8 @@ class Teacher(models.Model):
 
     class Meta:
         db_table = 'teacher'
+        
+    objects  = models.Manager()
 
 class APIs(models.Model):
     api_name = models.CharField(max_length=100)

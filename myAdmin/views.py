@@ -8,6 +8,9 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 import requests
 import json
+import pandas as pd
+import os
+from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
 app_name = 'myAdmin'
@@ -449,7 +452,7 @@ def studentIndex(request):
     categories = Categories.objects.filter(creator = request.user.id)
     student_form = forms.AddStudentForm()
     parent_form = forms.AddParentForm()
-    bulk_student_form = forms.BulkStudentUploadFormm()
+    bulk_student_form = forms.BulkStudentUploadForm()
     student_user_form = forms.AddStudentUserForm()
     if request.method == 'POST':
         user = User.objects.create(
@@ -582,13 +585,53 @@ def studentSync(request, id):
 
 @login_required(login_url="login_user")
 def studentBulkUpload(request):
-    excel_file = request.FILES['testing_file'].read()
+    myfile = request.FILES['student_file']
     academic_year = request.POST['academic_year']
     school_class = request.POST['school_class']
     section = request.POST['section']
-    wb = openpyxl.load_workbook(excel_file)
-    worksheet = wb["Sheet1"]
-    print(worksheet)
+    category = request.POST['category']
+    fs = FileSystemStorage()
+    filename = fs.save(myfile.name, myfile)
+    uploaded_file_url = fs.url(filename)              
+    empexceldata = pd.read_excel(filename)        
+    dbframe = empexceldata
+    for dbframe in dbframe.itertuples():
+        user = User.objects.create(
+            username = dbframe.First_name,
+            first_name = dbframe.First_name,
+            last_name = dbframe.Last_name,
+            password = make_password("23wesdxc@#WESDXC%"),
+            is_staff = 1,
+            is_active = 1,
+            is_superuser = 0,
+        )
+
+        parent = Parent.objects.create(
+            mother_first_name = dbframe.Mother_first _name,
+            mother_mobile = dbframe.Mother_mobile,
+            mother_email = dbframe.Mother_email,
+            father_first_name = dbframe.Father_first_name,
+            father_email = dbframe.Father_email,
+            father_mobile = dbframe.Father_mobile,
+        )
+        Student.objects.create(
+            admission_no = dbframe.Admission_no,
+            roll_no = dbframe.Roll_no,
+            academic_year = academic_year,
+            gender = dbframe.Gender,
+            dob = dbframe.Dob,
+            admission_data = dbframe.Admission_data,
+            mobile = dbframe.Father_mobile,
+            school_class = Class.objects.get(id = school_class),
+            creator_id = request.user.id,
+            parent_id = parent.id,
+            address = dbframe.v,
+            user_id = user.id,
+            category = Categories.objects.get(id = category),
+            section = Section.objects.get(id = section),
+        )
+    messages.success(request, 'All Students added successfully')
+    return redirect('studentIndex')  
 
 @login_required(login_url='login_user')
 def departmentIndex(request):
@@ -740,6 +783,7 @@ def teacherIndex(request):
     teacher_form = forms.AddTeacherForm()
     teacher_user_form = forms.AddTeacherUserForm()
     teachers = Teacher.objects.filter(creator = request.user.id)
+    bulk_teacher_form = forms.BulkTeachersUploadForm()()
     if request.method == 'POST':
         user = User.objects.create(
             username = request.POST.get('first_name')+request.POST.get('last_name'),
@@ -765,7 +809,7 @@ def teacherIndex(request):
             creator = request.user
         )
         messages.success(request, 'Teacher added successfully.')
-    return render(request, app_name+"/teachers/index.html", {'teacher_form' : teacher_form, 'teacher_user_form' : teacher_user_form, 'teachers' : teachers})
+    return render(request, app_name+"/teachers/index.html", {'teacher_form' : teacher_form, 'teacher_user_form' : teacher_user_form, 'teachers' : teachers, 'bulk_teacher_form' : bulk_teacher_form})
 
 @login_required(login_url="login_user")
 def teacherDelete(request, id):
@@ -834,3 +878,40 @@ def teacherSync(request, id):
         return JsonResponse({'status' : 'success'}, status = 200)
     else:
         return JsonResponse({'status' : 'error'}, status = 200)
+
+@login_required(login_url='login_user')
+def teacherBulkUpload(request):
+    myfile = request.FILES['teacher_file']
+    role = request.POST['role']
+    department = request.POST['department']
+    designation = request.POST['designation']
+    fs = FileSystemStorage()
+    filename = fs.save(myfile.name, myfile)
+    uploaded_file_url = fs.url(filename)              
+    empexceldata = pd.read_excel(filename)        
+    dbframe = empexceldata
+    for dbframe in dbframe.itertuples():
+        user = User.objects.create(
+            username = dbframe.First_name+dbframe.Last_name,
+            first_name = dbframe.First_name,
+            last_name = dbframe.Last_name,
+            email = dbframe.Email,
+            password = make_password("23wesdxc@#WESDXC%"),
+            is_staff = 1,
+            is_active = 1,
+            is_superuser = 0,
+        )
+        Teacher.objects.create(
+            staff_no = dbframe.Staff_No,
+            mobile = dbframe.Mobile,
+            role = Role.objects.get(id = role),
+            department = Department.objects.get(id = department),
+            designation = Designation.objects.get(id = designation),
+            dob = dbframe.Dob,
+            qualification = dbframe.Qualification,
+            address = dbframe.Address,
+            user_id = user.id,
+            creator = request.user
+        )
+    messages.success(request, 'All Teachers added successfully')
+    return redirect('teacherIndex')

@@ -40,6 +40,7 @@ urlpatterns = [
     path('teacher/edit/<int:id>', views.teacherEdit, name="teacherEdit"),
     path('teacher/update', views.teacherUpdate, name="teacherUpdate"),
     path('teacher/sync/<int:id>', views.teacherSync, name="teacherSync"),
+    path('teacher/bulk-upload', views.teacherBulkUpload, name="teacherBulkUpload"),
     path('department', views.departmentIndex, name="departmentIndex"),
     path('department/delete/<int:id>', views.departmentDelete, name="departmentDelete"),
     path('department/edit/<int:id>', views.departmentEdit, name="departmentEdit"),
