@@ -156,13 +156,15 @@ def add_address(request):
 
 @login_required(login_url='login_user')
 def dashboard(request):
-    school_class = Class.objects.filter(creator = request.user.id)
+    school_class = Class.objects.filter(creator = request.user.id)[:5]
     school_class_count = Class.objects.filter(creator = request.user.id).count()
-    student = Student.objects.filter(creator = request.user.id)
+    class_section = ClassSection.objects.all()
+    sections = Section.objects.filter(creator = request.user.id)
+    students = Student.objects.filter(creator = request.user.id)[:5]
     student_count = Student.objects.filter(creator = request.user.id).count()
-    teacher = Teacher.objects.filter(creator = request.user.id)
+    teachers = Teacher.objects.filter(creator = request.user.id)[:5]
     teacher_count = Teacher.objects.filter(creator = request.user.id).count()
-    return render(request, app_name+"/index.html", {'school_class' : school_class, 'student' : student, 'teacher' : teacher, 'school_class_count' : school_class_count, 'student_count' : student_count, 'teacher_count' : teacher_count})
+    return render(request, app_name+"/index.html", {'school_class' : school_class, 'students' : students, 'teachers' : teachers, 'school_class_count' : school_class_count, 'student_count' : student_count, 'teacher_count' : teacher_count, 'class_section' : class_section, 'sections' : sections})
 
 @login_required(login_url='login_user')
 def classIndex(request):
@@ -928,3 +930,7 @@ def teacherBulkUpload(request):
         )
     messages.success(request, 'All Teachers added successfully')
     return redirect('teacherIndex')
+
+@login_required(login_url="login_user")
+def paymentIndex(request):
+    return render(request, app_name+"/payment/index.html", {})

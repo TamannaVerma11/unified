@@ -57,4 +57,5 @@ urlpatterns = [
     path('role/delete/<int:id>', views.roleDelete, name="roleDelete"),
     path('role/edit/<int:id>', views.roleEdit, name="roleEdit"),
     path('role/update', views.roleUpdate, name="roleUpdate"),
+    path('payment', views.paymentIndex, name="paymentIndex"),
 ]

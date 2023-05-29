@@ -66,31 +66,57 @@
                </div>
             </div>
          </div>
-         <div class="col-xl-12 ">
+         <div class="col-xl-12 mt-5">
             <div class="white_card card_height_100 mb_30">
                <div class="container-fluid">
                   <div class="row">
-                     <div class="col-lg-12">
-                        <div class="deshboard-apps">
-                           <h5>Apps</h5>
+                     <div class="col-lg-1">
+                        <div class="row">
+                           <div class="col-lg-3">
+                              <div class="deshboard-apps">
+                                 <h5>Apps</h5>
+                              </div>
+                           </div>
                         </div>
                      </div>
-                     <div class="col-lg-4">
-                        <div class="deshboard-erp">
-                           <i class="fa fa-bus"></i>
-                           <h4>School ERP</h4>
-                        </div>
-                     </div>
-                     <div class="col-lg-4">
-                        <div class="deshboard-erp">
-                           <i class="fa fa-bus"></i>
-                           <h4>Classroom LMS</h4>
-                        </div>
-                     </div>
-                     <div class="col-lg-4">
-                        <div class="deshboard-erp">
-                           <i class="fa fa-bus"></i>
-                           <h4>Bus Tracking</h4>
+                     <div class="col-lg-11">
+                        <div class="row">
+                           <div class="col-lg-2">
+                              <div class="deshboard-erp">
+                                 <img src="{% static 'img/dashboard/erp.svg' %}">
+                                 <h4>School ERP</h4>
+                              </div>
+                           </div>
+                           <div class="col-lg-2">
+                              <div class="deshboard-erp">
+                                 <img src="{% static 'img/dashboard/lms.svg' %}">
+                                 <h4>Classroom LMS</h4>
+                              </div>
+                           </div>
+                           <div class="col-lg-2">
+                              <div class="deshboard-erp">
+                                 <img src="{% static 'img/dashboard/bus.svg' %}">
+                                 <h4>Bus Tracking</h4>
+                              </div>
+                           </div>
+                           <div class="col-lg-2">
+                              <div class="deshboard-erp">
+                                 <img src="{% static 'img/dashboard/live.svg' %}">
+                                 <h4>Live Class</h4>
+                              </div>
+                           </div>
+                           <div class="col-lg-2">
+                              <div class="deshboard-erp">
+                                 <img src="{% static 'img/dashboard/content.svg' %}">
+                                 <h4>Content</h4>
+                              </div>
+                           </div>
+                           <div class="col-lg-2">
+                              <div class="deshboard-erp">
+                                 <img src="{% static 'img/dashboard/website.svg' %}">
+                                 <h4>Website Management</h4>
+                              </div>
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -101,50 +127,145 @@
             <div class="white_card card_height_100 mb_30">
                <div class="container-fluid">
                   <div class="row">
-                     <div class="col-lg-9">
+                     <div class="col-lg-12">
                         <div class="row">
-                           <div class="col-lg-6">
+                           <div class="col-lg-4">
                               <div class="new-classes">
                                  <h3>Classes</h3>
-                                 <ul>
-                                    <li>Class</li>
-                                    <li class="new-class-li">Medium</li>
-                                    <li class="new-class-li">Section</li>
-                                 </ul>
                                  {% if school_class_count > 0 %}
-                                 
+                                 <table class="table lms_table_active2 p-0">
+                                    <thead style="background:#F44E52">
+                                       <tr>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Class</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Medium</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Section</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       {% for class in school_class %}
+                                          <tr>
+                                             <td>{{ class.class_name }}</td>
+                                             <td>{{ class.medium.medium_name }}</td>
+                                             <td>
+                                                {% for data in class_section %}
+                                                    {% if class.id == data.school_class_id %}
+                                                        {% for section in sections %}
+                                                            {% if section.id  == data.section_id %}
+                                                                {{section.section_name}} {% if forloop.counter != 0 %} ,{% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                          </tr>
+                                       {% endfor %}
+                                    </tbody>
+                                 </table>
                                  {% else %}
-                                 <div class="add-class" align="center">
+                                 <table class="table lms_table_active2 p-0">
+                                    <thead style="background:#F44E52">
+                                       <tr>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Class</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Medium</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Section</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr></tr>
+                                    </tbody>
+                                 </table>
+                                 <div class="add-student" align="center">
                                     <p>Sorry no classes currently exist<br> Start adding classes</p>
-                                    <button>Add Class</button>
+                                    <a href="{% url 'classIndex' %}" class="btn btn-primary button mb-3 mt-5">Add Class</a>
                                  </div>
                                  {% endif %}
                               </div>
                            </div>
-                           <div class="col-lg-6">
+                           <div class="col-lg-4">
                               <div class="new-student">
                                  <h3>Students</h3>
-                                 <ul>
-                                    <li>Enroll no.</li>
-                                    <li class="new-student-li">Name</li>
-                                    <li class="new-student-li">Program</li>
-                                 </ul>
+                                 {% if student_count > 0 %}
+                                 <table class="table lms_table_active2 p-0">
+                                    <thead style="background:#16a3a3">
+                                       <tr>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Enroll no.</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Name</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Class</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       {% for student in students %}
+                                          <tr>
+                                             <td>{{ student.roll_no }}</td>
+                                             <td>{{ student.user.first_name }}</td>
+                                             <td>{{ student.school_class.class_name }}</td>
+                                          </tr>
+                                       {% endfor %}
+                                    </tbody>
+                                 </table>
+                                 {% else %}
+                                 <table class="table lms_table_active2 p-0">
+                                    <thead style="background:#16a3a3">
+                                       <tr>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Enroll no.</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Name</th>
+                                          <th scope="col" style="color:#FFF;font-weight: 700;">Class</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <tr></tr>
+                                    </tbody>
+                                 </table>
                                  <div class="add-student" align="center">
                                     <p>Sorry, there are no student in this organization <br> Start adding Students</p>
-                                    <button>Add Student</button>
-                                    <button>Bulk Import Student</button>
+                                    <a href="{% url 'studentIndex' %}" class="btn btn-primary button mb-3 mt-5">Add Student</a>
                                  </div>
+                                 {% endif %}
                               </div>
                            </div>
-                        </div>
-                     </div>
-                     <div class="col-lg-3">
-                        <div class="new-teacher">
-                           <h3>Teachers</h3>
-                           <div class="add-teacher" align="center">
-                              <p>Sorry, there are no student in this organization <br> Start adding Students</p>
-                              <button>Add Student</button>
-                              <button>Bulk Import Student</button>
+                           <div class="col-lg-4">
+                              <div class="new-teacher">
+                                 <h3>Teachers</h3>
+                                 <div class="add-teacher" align="center">
+                                    {% if teacher_count > 0 %}
+                                       <table class="table lms_table_active2 p-0">
+                                          <thead style="background:#ff901e">
+                                             <tr>
+                                                <th scope="col" style="color:#FFF;font-weight: 700;">Name</th>
+                                                <th scope="col" style="color:#FFF;font-weight: 700;">Department</th>
+                                                <th scope="col" style="color:#FFF;font-weight: 700;">Role</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             {% for teacher in teachers %}
+                                                <tr>
+                                                   <td>{{ teacher.user.first_name }}</td>
+                                                   <td>{{ teacher.department.department_name }}</td>
+                                                   <td>{{ teacher.role.role_name }}</td>
+                                                </tr>
+                                             {% endfor %}
+                                          </tbody>
+                                       </table>
+                                       {% else %}
+                                       <table class="table lms_table_active2 p-0">
+                                          <thead style="background:#ff901e">
+                                             <tr>
+                                                <th scope="col" style="color:#FFF;font-weight: 700;">Name</th>
+                                                <th scope="col" style="color:#FFF;font-weight: 700;">Department</th>
+                                                <th scope="col" style="color:#FFF;font-weight: 700;">Role</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr></tr>
+                                          </tbody>
+                                       </table>
+                                       <div class="add-student" align="center">
+                                          <p>Sorry, there are no teacher in this organization <br> Start adding Teachers</p>
+                                          <a href="{% url 'teacherIndex' %}" class="btn btn-primary button mb-3 mt-3">Add Teacher</a>
+                                       </div>
+                                       {% endif %}
+                                 </div>
+                              </div>
                            </div>
                         </div>
                      </div>
