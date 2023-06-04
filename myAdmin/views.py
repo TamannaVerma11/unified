@@ -606,7 +606,7 @@ def studentSync(request, id):
     bus_headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     bus_response = requests.post(bus_url, data=json.dumps(bus_data, indent=4, sort_keys=True, default=str), headers=bus_headers)
     bus_response = json.loads(bus_response.text)
-    if lms_response['status'] == 'success' and bus_response['status'] == 'success':
+    if lms_response['status'] == 'success':
         Student.objects.filter(id = id).update(is_synced = 1)
         return JsonResponse({'status' : 'success'}, status = 200)
     else:
