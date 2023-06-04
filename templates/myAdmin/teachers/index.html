@@ -206,7 +206,7 @@
                     <form id="bulh_upload_form" method="post" action="{% url 'teacherBulkUpload' %}"  enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row mb-3">
-                            {% for form in bulk_student_form %}
+                            {% for form in bulk_teacher_form %}
                             <div class="col-md-4">
                                 <label class="form-label">{{form.label}}:</label>
                                 {{form}}
