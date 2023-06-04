@@ -23,11 +23,11 @@ def send_otp(request, mobile=None):
         'password'      : '8935',
         'sender'        : 'HRLOOM',
         'to'            : mobile,
-        'message'       : otp + ' is your One-Time-Password (OTP) to login at your Kidly account. Thank You! HRLOOM',
+        'message'       : otp + ' is your One Time Password (OTP) to verify your phone number on Tabschool. Thank You! HRLOOM	',
         'priority'      : '1',
         'dnd'           : '1',
-        'unicode'       : '0',
-        'dlttemplateid' : '1707166745786444045',
+        'unicode'       : '1',
+        'dlttemplateid' : '1707167750077393703',
         }
     headers = {}
     response = requests.post(url, data=json.dumps(data), headers=headers)
