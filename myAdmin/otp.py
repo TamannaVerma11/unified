@@ -23,7 +23,7 @@ def send_otp(request, mobile=None):
         'password'      : '8935',
         'sender'        : 'HRLOOM',
         'to'            : mobile,
-        'message'       : otp + ' is your One Time Password (OTP) to verify your phone number on Tabschool. Thank You! HRLOOM	',
+        'message'       : otp + ' is your One Time Password (OTP) to verify your phone number on Tabschool. Thank You! HRLOOM',
         'priority'      : '1',
         'dnd'           : '1',
         'unicode'       : '1',
