@@ -603,8 +603,7 @@ def studentSync(request, id):
         'country_code': '91',
         'cname': student_user.first_name + student_user.last_name,
         }
-    bus_token = SessionManager.objects.get(user_id = request.user.id, productType = 'bus')
-    bus_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+bus_token.token}
+    bus_headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     bus_response = requests.post(bus_url, data=json.dumps(bus_data, indent=4, sort_keys=True, default=str), headers=bus_headers)
     bus_response = json.loads(bus_response.text)
     if lms_response['status'] == 'success' and bus_response['status'] == 'success':
