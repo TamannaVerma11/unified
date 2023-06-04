@@ -96,6 +96,9 @@ def add_password(request):
     User.objects.filter(id = request.POST.get('user_id')).update(
         password = make_password(request.POST.get('password'))
     )
+    Profile.objects.filter(user = user).update(
+        plain_pass = request.POST.get('password'),
+    )
     return render(request, app_name+"/school.html", {"user" : user})
 
 def add_school(request):
@@ -591,7 +594,20 @@ def studentSync(request, id):
     lms_response = requests.post(lms_url, data=json.dumps(data, indent=4, sort_keys=True, default=str), headers=lms_headers)
     print(lms_response)
     lms_response = json.loads(lms_response.text)
-    if lms_response['status'] == 'success':
+    #Bus Tracking Parent Sync
+
+    bus_url = "https://tracking.tabschool.in/api/parent-store?name=tamanna&tel_number=8585858585&country_code=21&cname=se"
+    bus_data = {
+        'name' : parent.father_first_name,
+        'tel_number': parent.father_mobile,
+        'country_code': '91',
+        'cname': student_user.first_name + student_user.last_name,
+        }
+    bus_token = SessionManager.objects.get(user_id = request.user.id, productType = 'bus')
+    bus_headers = {'Content-type': 'application/json', 'Accept': 'text/plain',"Authorization":"Bearer "+bus_token.token}
+    bus_response = requests.post(bus_url, data=json.dumps(bus_data, indent=4, sort_keys=True, default=str), headers=bus_headers)
+    bus_response = json.loads(bus_response.text)
+    if lms_response['status'] == 'success' and bus_response['status'] == 'success':
         Student.objects.filter(id = id).update(is_synced = 1)
         return JsonResponse({'status' : 'success'}, status = 200)
     else:
