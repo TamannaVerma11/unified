@@ -27,7 +27,7 @@ def send_otp(request, mobile=None):
         'priority'      : '1',
         'dnd'           : '1',
         'unicode'       : '1',
-        'dlttemplateid' : '1707167750077393703',
+        'dlttemplateid' : '1707168603158034629',
         }
     headers = {}
     response = requests.post(url, data=json.dumps(data), headers=headers)

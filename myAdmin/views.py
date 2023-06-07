@@ -36,7 +36,7 @@ def login_user(request):
                 productType = 'lms',
                 user = user
             )
-        ais_url = "https://ais.tabschool.in/api/login?email=Admin@tabschool.in&password=123456"
+        ais_url = "https://ais.tabschool.in/api/login?email=admin@tabschool.in&password=123456"
         ais_headers={}
         ais_response = requests.get(ais_url,headers=ais_headers)
         ais_response = json.loads(ais_response.text)
