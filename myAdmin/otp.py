@@ -17,21 +17,9 @@ def send_otp(request, mobile=None):
         mobile = mobile,
         defaults={'mobile' : mobile,'otp' : otp, 'is_verified' : 0}
     )
-    url = 'https://www.kit19.com/ComposeSMS.aspx'
-    data = {
-        'username'      : 'heirloom683678',
-        'password'      : '8935',
-        'sender'        : 'HRLOOM',
-        'to'            : mobile,
-        'message'       : otp + ' is your One Time Password (OTP) to verify your phone number on Tabschool. Thank You! HRLOOM',
-        'priority'      : '1',
-        'dnd'           : '1',
-        'unicode'       : '1',
-        'dlttemplateid' : '1707168603158034629',
-        }
+    url = 'https://www.kit19.com/ComposeSMS.aspx?username=heirloom683678&password=8935&sender=HRLOOM&to='+mobile+'&message='+otp+' is your One Time Password (OTP) to verify your phone number on Tabschool. Thank You! HRLOOM	&priority=1&dnd=1&unicode=1&dlttemplateid=1707168603158034629'
     headers = {}
-    response = requests.post(url, data=json.dumps(data), headers=headers)
-    print(response)
+    response = requests.get(url, headers=headers)
     return JsonResponse({'otp' : otp}, status = 200)
 
 def verify_otp(mobile, otp):
