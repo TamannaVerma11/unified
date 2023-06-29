@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ssh root@128.199.25.122 <<EOF
+ssh root@156.67.220.117 <<EOF
   cd unified
   git pull
   source /opt/envs/unified/bin/activate
