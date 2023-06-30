@@ -3,7 +3,7 @@
 ssh root@156.67.220.117 <<EOF
   cd unified
   git pull
-  source /env/bin/activate
+  source env/bin/activate
   python manage.py makemigrations
   python manage.py migrate  --run-syncdb
   sudo service gunicorn restart
