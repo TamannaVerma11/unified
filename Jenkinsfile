@@ -12,7 +12,8 @@ node {
 
         stage 'Test'
             // sh 'virtualenv env -p python3.10'
-            sh 'source env/bin/activate'
+            // sh 'cd unified'
+            // sh 'source env/bin/activate'
             // sh 'env/bin/pip install -r requirements.txt'
             // sh 'env/bin/python3.10 manage.py test --testrunner=blog.tests.test_runners.NoDbTestRunner'
 
