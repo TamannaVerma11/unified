@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ssh root@156.67.220.117 /bin/bash <<EOF
+ 
   cd unified
   git pull
   source env/bin/activate
@@ -9,4 +9,4 @@ ssh root@156.67.220.117 /bin/bash <<EOF
   sudo service gunicorn restart
   sudo service nginx restart
   exit
-EOF
+ 
