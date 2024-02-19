@@ -82,8 +82,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'unified',
-        'USERNAME': 'sumit',
-        'PASSWORD': 'yes',
+        'USERNAME': 'tamanna',
+        'PASSWORD': 'YES',
         'POST': '3306',
         'HOST': 'localhost',
     }
